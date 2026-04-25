@@ -1,0 +1,3178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>邓炯斌-组会汇报 · Vibe Coding 入门与实践</title>
+<style>
+  :root {
+    --primary: #1e293b;
+    --accent: #2563eb;
+    --accent-light: #e8f0fe;
+    --sidebar-bg: #1e293b;
+    --sidebar-text: #cbd5e1;
+    --sidebar-active: #2563eb;
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --code-bg: #1e293b;
+    --green: #059669;
+    --amber: #d97706;
+    --red: #dc2626;
+    --sidebar-width: 260px;
+    --header-height: 56px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "PingFang SC", sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.8;
+    font-size: 15px;
+  }
+
+  /* ===== Header ===== */
+  .header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--header-height);
+    background: var(--sidebar-bg);
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .header h1 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-left: calc(var(--sidebar-width) + 16px);
+    transition: margin-left 0.3s;
+  }
+  .header .badge {
+    background: rgba(255,255,255,0.12);
+    border-radius: 4px;
+    padding: 2px 10px;
+    font-size: 11px;
+    margin-left: 12px;
+    color: #94a3b8;
+  }
+  .menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 4px;
+    margin-left: -4px;
+  }
+
+  /* ===== Sidebar ===== */
+  .sidebar {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    width: var(--sidebar-width);
+    bottom: 0;
+    background: var(--sidebar-bg);
+    overflow-y: auto;
+    z-index: 90;
+    padding: 12px 0;
+    transition: transform 0.3s;
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: #475569; border-radius: 2px; }
+  .sidebar .section-label {
+    padding: 16px 20px 4px;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: #64748b;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
+  .sidebar a {
+    display: block;
+    padding: 7px 20px 7px 24px;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    font-size: 13px;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+  .sidebar a:hover {
+    background: rgba(255,255,255,0.06);
+    color: white;
+  }
+  .sidebar a.active {
+    background: rgba(37,99,235,0.15);
+    border-left-color: var(--sidebar-active);
+    color: #93c5fd;
+  }
+  .sidebar a.sub {
+    padding-left: 36px;
+    font-size: 12px;
+    color: #94a3b8;
+  }
+
+  /* ===== Main Content ===== */
+  .main {
+    margin-left: var(--sidebar-width);
+    margin-top: var(--header-height);
+    padding: 40px 48px 80px;
+    max-width: 920px;
+  }
+
+  /* ===== 封面区 ===== */
+  .cover {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: white;
+    padding: 64px 48px 48px;
+    border-radius: 12px;
+    margin-bottom: 40px;
+  }
+  .cover h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .cover .subtitle {
+    font-size: 15px;
+    color: #94a3b8;
+    margin-bottom: 20px;
+  }
+  .cover .meta {
+    font-size: 13px;
+    color: #64748b;
+  }
+  .cover .meta span {
+    display: inline-block;
+    margin-right: 24px;
+  }
+
+  /* ===== 章节 ===== */
+  .chapter {
+    margin-bottom: 56px;
+  }
+  .chapter-header {
+    margin-bottom: 24px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--accent);
+  }
+  .chapter-header .number {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  .chapter-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  .chapter-header .desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--primary);
+    margin: 28px 0 12px;
+    padding-left: 12px;
+    border-left: 3px solid var(--accent);
+  }
+  h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 20px 0 10px;
+  }
+  p {
+    margin-bottom: 14px;
+    color: var(--text-secondary);
+  }
+  ul, ol {
+    margin-bottom: 14px;
+    padding-left: 20px;
+    color: var(--text-secondary);
+  }
+  li {
+    margin-bottom: 6px;
+  }
+  strong { color: var(--text); font-weight: 600; }
+
+  /* ===== Code ===== */
+  pre {
+    background: var(--code-bg);
+    color: #e2e8f0;
+    padding: 18px 20px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 16px 0;
+    font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  }
+  pre .comment { color: #64748b; font-style: italic; }
+  pre .keyword { color: #818cf8; }
+  pre .string { color: #34d399; }
+  code:not(pre code) {
+    background: #f1f5f9;
+    color: #dc2626;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 13px;
+    font-family: "JetBrains Mono", Consolas, monospace;
+  }
+
+  /* ===== 步骤卡片 ===== */
+  .step-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin: 14px 0;
+  }
+  .step-card .step-title {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+  .step-card .step-title .num {
+    display: inline-block;
+    width: 24px; height: 24px;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-right: 8px;
+  }
+  .step-card .step-body {
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+
+  /* ===== 方法卡片 ===== */
+  .method-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 22px 26px;
+    margin: 20px 0;
+    border-left: 4px solid var(--accent);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .method-card .method-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  .method-card .method-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 2px 0 8px;
+    width: 100%;
+  }
+  .method-card .tool-tag {
+    background: var(--accent-light);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  /* ===== 对比表格 ===== */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+  }
+  .compare-table th {
+    background: var(--primary);
+    color: white;
+    padding: 11px 14px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .compare-table th:first-child { border-radius: 6px 0 0 0; }
+  .compare-table th:last-child { border-radius: 0 6px 0 0; }
+  .compare-table td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+  .compare-table tr:nth-child(even) td { background: var(--bg); }
+  .compare-table tr:last-child td:first-child { border-radius: 0 0 0 6px; }
+  .compare-table tr:last-child td:last-child { border-radius: 0 0 6px 0; }
+  .rating-high { color: var(--green); font-weight: 600; }
+  .rating-mid { color: var(--amber); font-weight: 600; }
+  .rating-low { color: var(--red); font-weight: 600; }
+
+  /* ===== 截图 ===== */
+  .img-wrapper {
+    margin: 18px 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .img-wrapper img {
+    width: 100%;
+    display: block;
+    max-height: 600px;
+    object-fit: cover;
+    object-position: top;
+  }
+  .img-wrapper .caption {
+    padding: 8px 16px;
+    background: #f1f5f9;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ===== 截图解析卡片 ===== */
+  .analysis-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin: 20px 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .analysis-card .analysis-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primary);
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: 20px;
+  }
+  .analysis-card .analysis-section {
+    margin-bottom: 22px;
+  }
+  .analysis-card .analysis-section:last-child { margin-bottom: 0; }
+  .analysis-card .analysis-subtitle {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 12px;
+    padding-left: 0;
+  }
+  .analysis-card .layout-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .analysis-card .layout-item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+  }
+  .analysis-card .layout-item .label {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+    background: var(--accent);
+    padding: 2px 10px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  .analysis-card .layout-item .label.green { background: var(--green); }
+  .analysis-card .layout-item .label.amber { background: var(--amber); }
+  .analysis-card .layout-item .label.purple { background: #7c3aed; }
+  .analysis-card .layout-item .text {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  .analysis-card .feature-item {
+    background: var(--bg);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+  }
+  .analysis-card .feature-item .f-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--primary);
+    margin-bottom: 4px;
+  }
+  .analysis-card .feature-item .f-body {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  .analysis-card .feature-item .f-body code {
+    background: var(--accent-light);
+    color: var(--accent);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 13px;
+  }
+  .analysis-card .analysis-note {
+    font-size: 13px;
+    color: var(--text-muted);
+    background: #f8fafc;
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-top: 10px;
+    line-height: 1.6;
+  }
+  .analysis-card .analysis-note strong { color: var(--text); }
+
+  /* ===== 提示框 ===== */
+  .callout {
+    padding: 16px 20px;
+    border-radius: 6px;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .callout-info { background: var(--accent-light); border-left: 4px solid var(--accent); color: #1e40af; }
+  .callout-warn { background: #fffbeb; border-left: 4px solid var(--amber); color: #92400e; }
+  .callout-tip { background: #f0fdf4; border-left: 4px solid var(--green); color: #065f46; }
+  .callout-key { background: #f0f0ff; border-left: 4px solid #7c3aed; color: #4c1d95; }
+
+  /* ===== 任务要求 ===== */
+  .req-list { list-style: none; padding: 0; }
+  .req-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+  .req-list .req-num {
+    flex-shrink: 0;
+    width: 26px; height: 26px;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .req-list .req-text { flex: 1; color: var(--text-secondary); font-size: 14px; }
+  .req-list .req-text strong { color: var(--text); }
+
+  /* ===== 流程图 ===== */
+  .flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  .flow-box {
+    background: var(--accent);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    text-align: center;
+    min-width: 90px;
+  }
+  .flow-box.green { background: var(--green); }
+  .flow-box.orange { background: var(--amber); }
+  .flow-box.purple { background: #7c3aed; }
+  .flow-arrow { font-size: 18px; color: var(--text-muted); }
+
+  /* ===== 工具表 ===== */
+  .tool-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .tool-table th {
+    background: var(--primary);
+    color: white;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .tool-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+  .tool-table tr:nth-child(even) td { background: var(--bg); }
+  .deliver-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+  }
+  .deliver-table th {
+    background: var(--primary);
+    color: white;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .deliver-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+  .deliver-table tr:nth-child(even) td { background: var(--bg); }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+
+  .footer {
+    text-align: center;
+    padding: 32px;
+    color: var(--text-muted);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  /* ===== 进度条 ===== */
+  .progress-bar {
+    position: fixed;
+    top: var(--header-height);
+    left: var(--sidebar-width);
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), #7c3aed);
+    z-index: 99;
+    width: 0;
+    transition: width 0.2s;
+  }
+
+  /* ===== 回到顶部 ===== */
+  .scroll-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 40px; height: 40px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    display: none;
+    z-index: 99;
+  }
+  .scroll-top:hover { background: #334155; }
+
+  @media (max-width: 860px) {
+    .sidebar {
+      transform: translateX(-100%);
+    }
+    .sidebar.open { transform: translateX(0); }
+    .menu-toggle { display: block; }
+    .header h1 { margin-left: 12px; font-size: 14px; }
+    .main { margin-left: 0; padding: 24px 18px; }
+    .cover { padding: 40px 24px; }
+    .cover h1 { font-size: 24px; }
+    .flow { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+    .progress-bar { left: 0; }
+    .compare-table { font-size: 13px; }
+    .compare-table th, .compare-table td { padding: 8px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <button class="menu-toggle" id="menuToggle">☰</button>
+  <h1>Vibe Coding 入门</h1>
+  <span class="badge">邓炯斌-组会汇报</span>
+</div>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar">
+  <div class="section-label">第一部分 · Vibe Coding</div>
+  <a onclick="scrollToId('concept')">1. Vibe Coding 概述</a>
+  <a onclick="scrollToId('concept')" class="sub">1.1 Vibe Coding 是什么</a>
+  <a onclick="scrollToId('workflow')" class="sub">1.2 工作流程</a>
+  <a onclick="scrollToId('tools')" class="sub">1.3 工具生态</a>
+  <a onclick="scrollToId('architecture')" class="sub">1.4 选择架构</a>
+  <a onclick="scrollToId('vibecoder')" class="sub">1.5 Vibe Coder 职业与行业现状</a>
+  <a onclick="scrollToId('example')">2. 演示案例：腰椎功能评估系统</a>
+  <a onclick="scrollToId('method1')">3. 三种编程方法对比</a>
+  <a onclick="scrollToId('method1')" class="sub">3.1 IDE 对话式（Cursor）</a>
+  <a onclick="scrollToId('method2')" class="sub">3.2 AI Agent 命令行（Hermes）</a>
+  <a onclick="scrollToId('method3')" class="sub">3.3 多模态生成</a>
+  <a onclick="scrollToId('compare')">4. 三种方法横评</a>
+
+  <div class="section-label">第二部分 · 了解 GitHub</div>
+  <a onclick="scrollToId('git-concept')">5.1 为什么用它？</a>
+  <a onclick="scrollToId('git-analogy')">5.2 核心概念（类比）</a>
+  <a onclick="scrollToId('git-steps')">5.3 手把手操作</a>
+  <a onclick="scrollToId('git-benefits')">5.4 对我们有什么用？</a>
+  <a onclick="scrollToId('git-cheatsheet')">5.5 快速参考</a>
+
+  <div class="section-label">第三部分 · 实战任务</div>
+  <a onclick="scrollToId('task-bg')">6.1 任务背景</a>
+  <a onclick="scrollToId('task-req')">6.2 功能要求</a>
+  <a onclick="scrollToId('task-template')">6.3 模板代码</a>
+  <a onclick="scrollToId('task-deliver')">6.4 预期结果</a>
+  <a onclick="scrollToId('task-resource')">6.6 学习资源</a>
+  <a onclick="scrollToId('task-tips')">6.7 几点补充</a>
+
+  <div style="padding: 20px; margin-top: 12px; border-top: 1px solid #334155; font-size: 11px; color: #64748b; text-align: center;">
+    参考：Datawhale Easy-Vibe<br>内容整理：邓炯斌
+  </div>
+</nav>
+
+<!-- Main -->
+<div class="main">
+
+<!-- 封面 -->
+<div class="cover">
+  <h1>Vibe Coding 入门与实践</h1>
+  <p class="subtitle">从自然语言到可用代码 · 三种编程方法的对比与探索</p>
+  <div class="meta">
+    <span>📅 2026年4月</span>
+    <span>👤 邓炯斌</span>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- 第一部分 -->
+<!-- ============================================ -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="number">第一部分</div>
+    <h2>Vibe Coding 概述与三种方法对比</h2>
+    <p class="desc">理解 Vibe Coding 的核心思想，通过同一个任务场景对比三种主流编程方法的异同。</p>
+  </div>
+
+  <h3 id="concept">1.1 Vibe Coding 是什么</h3>
+  <p>
+    <strong>Vibe Coding</strong> 是 AI 大神 Andrej Karpathy 提出的概念。核心思想就一句话：
+  </p>
+
+  <div class="callout callout-key">
+    <p style="font-size: 16px; font-weight: 500;">你不需要先学会写代码再做事。你描述需求，AI 写代码，你测试、反馈、迭代。全程像聊天一样把程序"聊"出来。</p>
+  </div>
+
+  <p>
+    传统编程的学习路径是：学语法 → 理解概念 → 做练习 → 能做小项目 → 做大项目。这个过程通常以年计。
+  </p>
+  <p>
+    Vibe Coding 的路径是：描述你想要的东西 → AI 帮你写出来 → 你看效果 → 不满意继续说 → AI 改 → 你在这个过程中顺便学会了。
+  </p>
+
+  <div class="flow">
+    <div class="flow-box">🗣️ 你说需求</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box green">🤖 AI 写代码</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box orange">👀 你看效果</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box purple">💬 反馈迭代</div>
+  </div>
+
+  <p>
+    Karpathy 本人对此有一个精辟的比喻：<strong>"最好的 LLM 应用都有一个自主性滑块——你可以控制给 AI 多少自由度。在 Cursor 中，你可以做 Tab 补全、Cmd+K 定向修改，或者让它以完全自主的 Agent 模式运行。"</strong>
+  </p>
+
+  <h3 id="workflow">1.2 Vibe Coding 的工作流程</h3>
+  <p>无论使用哪种工具，Vibe Coding 的通用流程都是如此：</p>
+  <ol>
+    <li><strong>明确需求</strong> — 想清楚你要做什么功能，越具体越好</li>
+    <li><strong>描述给 AI</strong> — 用自然语言把你的需求说清楚</li>
+    <li><strong>审查结果</strong> — 看 AI 生成的代码和效果是否符合预期</li>
+    <li><strong>反馈迭代</strong> — 指出不足，让 AI 修改</li>
+    <li><strong>验收完成</strong> — 满意后保存、部署</li>
+  </ol>
+
+  <div class="callout callout-tip">
+    <strong>与 AI 对话的核心技巧：</strong><br>
+    — <strong>具体：</strong>"加一个按钮" → ❌ 太模糊；"在页面底部加一个蓝色圆角的'提交'按钮，点击后弹出确认对话框" → ✅<br>
+    — <strong>给上下文：</strong>告诉 AI 这个项目是做什么的、用户是谁、之前做了什么<br>
+    — <strong>迭代式：</strong>不要指望一次对话就完美，先出第一版，然后说"按钮挪到左边""颜色换成医院的蓝色"<br>
+    — <strong>遇到报错直接把错误信息复制给 AI：</strong>它比你更擅长读报错
+  </div>
+
+  <h3 id="tools">1.3 Vibe Coding 的工具生态</h3>
+  <table class="tool-table">
+    <tr><th>工具</th><th>用途</th><th>需要掌握到什么程度</th></tr>
+    <tr><td><strong>Cursor / Windsurf</strong></td><td>AI 编程 IDE，在编辑器中与 AI 对话生成代码</td><td>知道怎么打开、怎么打字问 AI 即可</td></tr>
+    <tr><td><strong>Hermes Agent / Claude Code</strong></td><td>命令行 AI Agent，一次下发任务自动完成全流程</td><td>会打开终端、输入命令即可</td></tr>
+    <tr><td><strong>ChatGPT / Claude (多模态)</strong></td><td>通过截图/手绘让 AI 理解你的视觉意图</td><td>会上传图片、会描述需求即可</td></tr>
+    <tr><td><strong>Git + GitHub</strong></td><td>代码版本管理与协作</td><td>学会 4-5 个核心命令即可入门</td></tr>
+    <tr><td><strong>Tailwind CSS</strong></td><td>前端样式框架（CDN 零安装）</td><td>不需要专门学，AI 帮你写样式</td></tr>
+  </table>
+
+  <hr>
+
+  <!-- ===== 1.4 选择架构 ===== -->
+  <h3 id="architecture">1.4 选择架构</h3>
+
+  <p>你可能会问：上面列了这么多工具，到底该用哪个？答案取决于你选的<strong>架构</strong>。</p>
+
+  <p>架构简单说就是<strong>你的程序用什么技术搭起来的</strong>。一个网页应用至少包括前端（用户看到的界面）、后端（处理逻辑的服务器）、数据库（存数据的地方）。但不同的组合决定了你的项目有多复杂、需要什么工具、以及 AI 能不能帮你搞定。</p>
+
+  <p>为什么要在开始编程之前先想清楚架构？因为不同的架构对 AI 工具的要求不一样。比如你想做一个带用户登录、数据存服务器的系统，那就需要前端 + 后端 + 数据库三个部分，AI 得能同时处理多种语言和框架。而如果只是一个<strong>浏览器打开就能用的单页工具</strong>，那就只需要一个 HTML 文件——任何 AI 工具都能轻松搞定。</p>
+
+  <p>这次演示案例选的是<strong>纯前端单页应用</strong>（HTML + Tailwind CSS CDN + Vanilla JS），理由很简单：<strong>零部署、零安装、零服务器</strong>。你写完一个 <code>index.html</code>，双击就能在浏览器里打开，发给别人也能直接用。对于临床科研中常见的数据收集、量表评估、纳排判断这类工具来说，这个架构够用了，而且对零基础的同学最友好。如果后续需要加后端和数据库，也可以在此基础上扩展。</p>
+
+  <p>下面就用同一套架构、同一个需求，演示三种不同的编程方法怎么实现。</p>
+
+<h3 id="vibecoder">1.5 Vibe Coder：新兴职业与行业现状</h3>
+
+  <p>
+    <strong>Vibe Coder</strong> 是指以 AI 对话式编程为主要开发方式、以"说人话、出代码"为核心工作流的开发者。2024-2025 年，这个角色从个人实验性玩法演变为有稳定商业模式的职业方向。
+  </p>
+
+  <p>
+    <strong>行业现状：</strong>Lovable.dev 等平台已雇佣全职 Vibe Coder（如工程师 Lazar Jovanovic），通过自然语言对话直接为客户生成产品。传统开发者、设计师甚至非技术背景的创始人都能通过 AI 工具交付可用软件，Authentic Jobs 等招聘平台已出现 "Vibe Coder" 岗位。ClawHub.ai 托管了 58.7k+ Skills，Vibe Coders 在其中分享和交易可复用的 AI 工作流，形成新的供需生态。
+  </p>
+
+  <p>
+    <strong>变现路径：</strong>Upwork 自由职业接单（单项目 $200-$2000）、AI 加速的 SaaS 独立产品（开发成本降至传统 10-20%）、ClawHub / Gumroad 模板与技能售卖（成熟玩家月收入数千美元）、以及教学内容输出（Global Tech Council 指出这是增长最快的分支）。
+  </p>
+
+  <p>
+    <strong>代表性产品：</strong>bolt.new / Lovable.dev（AI 全栈生成平台）、Datawhale Easy-Vibe 课程（中文代表作）、ClawHub Skills 商店（社区交易中心）。越来越多个人开发者通过 Vibe Coding 在一天内完成从灵感到上线的全过程。
+  </p>
+
+  <div class="callout callout-tip">
+    <strong>延伸思考：</strong>对于临床科研团队，Vibe Coder 思维的核心价值在于"让懂行的人自己造工具"——你不需要成为专业程序员，也能把你的临床判断逻辑变成可用的数字工具。这意味着科研流程中的很多重复性环节可以被快速数字化，且成本可控。
+  </div>
+
+  <hr>
+
+  <!-- ===== 演示案例 ===== -->
+  <h3 id="example">2. 演示案例：腰椎功能评估系统</h3>
+  <p>
+    一个用于骨科临床随访的<strong>单页 Web 应用</strong>，包含三个核心模块：
+  </p>
+  <ul>
+    <li><strong>基线资料</strong> — 患者姓名、性别、年龄、住院号、随访阶段</li>
+    <li><strong>量表评估</strong> — NRS 疼痛数字评分（滑块 0-10）、RMDQ 功能障碍问卷（24 项勾选）、ODI 功能障碍指数（10 维度单选）</li>
+    <li><strong>结果展示</strong> — 提交后显示各项评分的汇总摘要</li>
+  </ul>
+  <p>技术栈统一为 <code>HTML + Tailwind CSS (CDN) + Vanilla JS</code>，浏览器直接打开即可运行。</p>
+
+  
+  <div style="text-align: center; margin: 20px 0;">
+    <iframe srcdoc="<!DOCTYPE html>
+<html lang=&quot;zh-CN&quot;>
+<head>
+  <meta charset=&quot;UTF-8&quot;>
+  <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot;>
+  <title>腰椎功能评估系统</title>
+  <script src=&quot;https://cdn.tailwindcss.com&quot;></script>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #3b82f6;
+      --bg-light: #f8fafc;
+    }
+    
+    /* 自定义滑块样式 */
+    input[type=&quot;range&quot;] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: linear-gradient(to right, #22c55e 0%, #eab308 50%, #ef4444 100%);
+      outline: none;
+    }
+    
+    input[type=&quot;range&quot;]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #2563eb;
+      cursor: pointer;
+      border: 3px solid white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    
+    input[type=&quot;range&quot;]::-moz-range-thumb {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #2563eb;
+      cursor: pointer;
+      border: 3px solid white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    
+    /* 自定义复选框 */
+    .custom-checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .custom-checkbox:hover {
+      background: #f1f5f9;
+    }
+    
+    .custom-checkbox input[type=&quot;checkbox&quot;] {
+      width: 20px;
+      height: 20px;
+      accent-color: #2563eb;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    
+    /* 单选按钮组 */
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .radio-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 2px solid #e2e8f0;
+      transition: all 0.2s;
+    }
+    
+    .radio-option:hover {
+      border-color: #93c5fd;
+      background: #f8fafc;
+    }
+    
+    .radio-option.selected {
+      border-color: #2563eb;
+      background: #eff6ff;
+    }
+    
+    .radio-option input[type=&quot;radio&quot;] {
+      width: 18px;
+      height: 18px;
+      accent-color: #2563eb;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    
+    /* 加载动画 */
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ffffff;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* 禁用性生活提示 */
+    .skip-hint {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+    
+    /* 进度指示器 */
+    .progress-bar {
+      height: 4px;
+      background: #e2e8f0;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: #2563eb;
+      transition: width 0.3s ease;
+    }
+  </style>
+</head>
+<body class=&quot;bg-gray-50 min-h-screen&quot;>
+  <!-- 顶部导航栏 -->
+  <header class=&quot;bg-blue-600 text-white py-4 px-4 shadow-md sticky top-0 z-50&quot;>
+    <div class=&quot;max-w-2xl mx-auto&quot;>
+      <h1 class=&quot;text-lg font-bold text-center&quot;>🩺 腰椎功能评估系统</h1>
+      <p class=&quot;text-blue-100 text-xs text-center mt-1&quot;>Lumbar Spine Functional Assessment</p>
+    </div>
+  </header>
+  
+  <!-- 进度指示 -->
+  <div class=&quot;bg-white border-b sticky top-16 z-40&quot;>
+    <div class=&quot;max-w-2xl mx-auto px-4 py-3&quot;>
+      <div class=&quot;flex justify-between text-xs text-gray-500 mb-2&quot;>
+        <span id=&quot;step-text&quot;>步骤 1/3: 基线资料</span>
+        <span id=&quot;progress-percent&quot;>33%</span>
+      </div>
+      <div class=&quot;progress-bar&quot;>
+        <div class=&quot;progress-fill&quot; id=&quot;progress-fill&quot; style=&quot;width: 33%&quot;></div>
+      </div>
+    </div>
+  </div>
+
+  <main class=&quot;max-w-2xl mx-auto px-4 py-6&quot;>
+    <!-- Section 1: 基线资料 -->
+    <section id=&quot;section-1&quot; class=&quot;section&quot;>
+      <div class=&quot;bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden&quot;>
+        <div class=&quot;bg-blue-600 text-white px-5 py-3&quot;>
+          <h2 class=&quot;font-semibold&quot;>📋 基线资料</h2>
+        </div>
+        <div class=&quot;p-5 space-y-5&quot;>
+          <!-- 姓名 -->
+          <div>
+            <label class=&quot;block text-sm font-medium text-gray-700 mb-2&quot;>
+              姓名 <span class=&quot;text-red-500&quot;>*</span>
+            </label>
+            <input type=&quot;text&quot; id=&quot;name&quot; required
+              class=&quot;w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition&quot;
+              placeholder=&quot;请输入患者姓名&quot;>
+          </div>
+          
+          <!-- 性别 & 年龄 -->
+          <div class=&quot;grid grid-cols-2 gap-4&quot;>
+            <div>
+              <label class=&quot;block text-sm font-medium text-gray-700 mb-2&quot;>
+                性别 <span class=&quot;text-red-500&quot;>*</span>
+              </label>
+              <select id=&quot;gender&quot; required
+                class=&quot;w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white&quot;>
+                <option value=&quot;&quot;>请选择</option>
+                <option value=&quot;male&quot;>男</option>
+                <option value=&quot;female&quot;>女</option>
+              </select>
+            </div>
+            <div>
+              <label class=&quot;block text-sm font-medium text-gray-700 mb-2&quot;>
+                年龄 <span class=&quot;text-red-500&quot;>*</span>
+              </label>
+              <input type=&quot;number&quot; id=&quot;age&quot; required min=&quot;1&quot; max=&quot;120&quot;
+                class=&quot;w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition&quot;
+                placeholder=&quot;岁&quot;>
+            </div>
+          </div>
+          
+          <!-- 住院号 -->
+          <div>
+            <label class=&quot;block text-sm font-medium text-gray-700 mb-2&quot;>
+              住院号 <span class=&quot;text-red-500&quot;>*</span>
+            </label>
+            <input type=&quot;text&quot; id=&quot;hospital-id&quot; required
+              class=&quot;w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition&quot;
+              placeholder=&quot;请输入住院号&quot;>
+          </div>
+          
+          <!-- 随访阶段 -->
+          <div>
+            <label class=&quot;block text-sm font-medium text-gray-700 mb-2&quot;>
+              随访阶段 <span class=&quot;text-red-500&quot;>*</span>
+            </label>
+            <select id=&quot;followup-stage&quot; required
+              class=&quot;w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white&quot;>
+              <option value=&quot;&quot;>请选择</option>
+              <option value=&quot;pre-op&quot;>术前</option>
+              <option value=&quot;post-op-1w&quot;>术后1周</option>
+              <option value=&quot;post-op-1m&quot;>术后1月</option>
+              <option value=&quot;post-op-3m&quot;>术后3月</option>
+              <option value=&quot;post-op-6m&quot;>术后6月</option>
+              <option value=&quot;post-op-1y&quot;>术后1年</option>
+              <option value=&quot;post-op-2y&quot;>术后2年</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 下一步按钮 -->
+      <div class=&quot;mt-6&quot;>
+        <button onclick=&quot;goToSection(2)&quot;
+          class=&quot;w-full bg-blue-600 text-white py-4 rounded-xl font-semibold text-lg shadow-md hover:bg-blue-700 active:scale-[0.98] transition-all&quot;>
+          下一步 → 开始量表评估
+        </button>
+      </div>
+    </section>
+
+    <!-- Section 2: 量表评估 -->
+    <section id=&quot;section-2&quot; class=&quot;section hidden&quot;>
+      <!-- NRS 疼痛评分 -->
+      <div class=&quot;bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6&quot;>
+        <div class=&quot;bg-blue-600 text-white px-5 py-3&quot;>
+          <h2 class=&quot;font-semibold&quot;>📊 NRS 疼痛数字评分</h2>
+          <p class=&quot;text-blue-100 text-xs mt-1&quot;>Numeric Rating Scale</p>
+        </div>
+        <div class=&quot;p-5&quot;>
+          <p class=&quot;text-sm text-gray-600 mb-4&quot;>
+            请评估您 <strong class=&quot;text-blue-600&quot;>过去1周</strong> 的平均疼痛程度：
+          </p>
+          
+          <div class=&quot;mb-4&quot;>
+            <div class=&quot;flex justify-between text-xs text-gray-500 mb-2&quot;>
+              <span>无痛 (0)</span>
+              <span>轻度 (1-3)</span>
+              <span>中度 (4-6)</span>
+              <span>重度 (7-10)</span>
+            </div>
+            <input type=&quot;range&quot; id=&quot;nrs-slider&quot; min=&quot;0&quot; max=&quot;10&quot; value=&quot;0&quot; 
+              class=&quot;w-full&quot; oninput=&quot;updateNRS(this.value)&quot;>
+          </div>
+          
+          <div class=&quot;text-center&quot;>
+            <span class=&quot;text-4xl font-bold text-blue-600&quot; id=&quot;nrs-value&quot;>0</span>
+            <span class=&quot;text-gray-500 text-lg&quot;>分</span>
+          </div>
+          
+          <!-- 疼痛等级提示 -->
+          <div class=&quot;mt-4 p-3 rounded-lg bg-gray-50&quot;>
+            <p class=&quot;text-sm text-gray-600&quot; id=&quot;nrs-hint&quot;>
+              💙 无痛：您的疼痛感觉为0，生活不受影响
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- RMDQ 量表 -->
+      <div class=&quot;bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6&quot;>
+        <div class=&quot;bg-blue-600 text-white px-5 py-3&quot;>
+          <h2 class=&quot;font-semibold&quot;>📝 RMDQ Roland-Morris 功能障碍问卷</h2>
+          <p class=&quot;text-blue-100 text-xs mt-1&quot;>共24项，勾选符合您情况的条目</p>
+        </div>
+        <div class=&quot;p-5&quot;>
+          <p class=&quot;text-sm text-gray-600 mb-4&quot;>
+            当您感到腰痛时，以下哪些描述符合您的情况？请勾选所有适用的条目：
+          </p>
+          
+          <div class=&quot;space-y-2&quot; id=&quot;rmdq-container&quot;>
+            <!-- RMDQ 条目将通过 JS 动态生成 -->
+          </div>
+          
+          <div class=&quot;mt-4 p-3 bg-blue-50 rounded-lg&quot;>
+            <p class=&quot;text-sm text-blue-800&quot;>
+              已选择: <strong id=&quot;rmdq-count&quot;>0</strong> / 24 项
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ODI 量表 -->
+      <div class=&quot;bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6&quot;>
+        <div class=&quot;bg-blue-600 text-white px-5 py-3&quot;>
+          <h2 class=&quot;font-semibold&quot;>📈 ODI Oswestry 功能障碍指数</h2>
+          <p class=&quot;text-blue-100 text-xs mt-1&quot;>共10个维度，每个维度选择最符合的一项</p>
+        </div>
+        <div class=&quot;p-5&quot; id=&quot;odi-container&quot;>
+          <!-- ODI 条目将通过 JS 动态生成 -->
+        </div>
+      </div>
+      
+      <!-- 提交按钮 -->
+      <div class=&quot;mt-6 space-y-3&quot;>
+        <button onclick=&quot;submitAssessment()&quot; id=&quot;submit-btn&quot;
+          class=&quot;w-full bg-blue-600 text-white py-4 rounded-xl font-semibold text-lg shadow-md hover:bg-blue-700 active:scale-[0.98] transition-all flex items-center justify-center gap-2&quot;>
+          <span>✓ 提交评估</span>
+        </button>
+        <button onclick=&quot;goToSection(1)&quot;
+          class=&quot;w-full bg-gray-100 text-gray-600 py-3 rounded-xl font-medium hover:bg-gray-200 transition-all&quot;>
+          ← 返回修改基线资料
+        </button>
+      </div>
+    </section>
+
+    <!-- Section 3: 结果展示 -->
+    <section id=&quot;section-3&quot; class=&quot;section hidden&quot;>
+      <div class=&quot;bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden&quot;>
+        <div class=&quot;p-8 text-center&quot;>
+          <div class=&quot;w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4&quot;>
+            <svg class=&quot;w-10 h-10 text-green-500&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot;>
+              <path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M5 13l4 4L19 7&quot;></path>
+            </svg>
+          </div>
+          <h2 class=&quot;text-2xl font-bold text-gray-800 mb-2&quot;>提交成功！</h2>
+          <p class=&quot;text-gray-600 mb-6&quot;>感谢您的参与，评估数据已成功上传。</p>
+          
+          <!-- 结果摘要 -->
+          <div class=&quot;bg-gray-50 rounded-lg p-4 text-left mb-6&quot;>
+            <h3 class=&quot;font-semibold text-gray-700 mb-3&quot;>📊 评估结果摘要</h3>
+            <div class=&quot;space-y-2 text-sm&quot;>
+              <div class=&quot;flex justify-between&quot;>
+                <span class=&quot;text-gray-500&quot;>NRS 疼痛评分:</span>
+                <span class=&quot;font-semibold text-blue-600&quot; id=&quot;result-nrs&quot;>-</span>
+              </div>
+              <div class=&quot;flex justify-between&quot;>
+                <span class=&quot;text-gray-500&quot;>RMDQ 功能障碍:</span>
+                <span class=&quot;font-semibold text-blue-600&quot; id=&quot;result-rmdq&quot;>-</span>
+              </div>
+              <div class=&quot;flex justify-between&quot;>
+                <span class=&quot;text-gray-500&quot;>ODI 功能障碍指数:</span>
+                <span class=&quot;font-semibold text-blue-600&quot; id=&quot;result-odi&quot;>-</span>
+              </div>
+            </div>
+          </div>
+          
+          <button onclick=&quot;resetForm()&quot;
+            class=&quot;bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition-all&quot;>
+            开始新评估
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class=&quot;bg-gray-100 border-t mt-8 py-4 px-4&quot;>
+    <p class=&quot;text-center text-xs text-gray-500&quot;>
+      © 2026 腰椎功能评估系统 · 仅供临床研究使用
+    </p>
+  </footer>
+
+  <script>
+    // ============================================
+    // 数据定义
+    // ============================================
+    
+    // RMDQ 24条目数据（中文版）
+    const RMDQ_ITEMS = [
+      &quot;我因为腰痛整天待在家里&quot;,
+      &quot;我为了减轻腰痛经常变换姿势&quot;,
+      &quot;我因为腰痛走路比平时慢&quot;,
+      &quot;我因为腰痛不做平时常做的家务&quot;,
+      &quot;我因为腰痛经常扶着椅背站起&quot;,
+      &quot;我因为腰痛经常躺下休息&quot;,
+      &quot;我因为腰痛必须扶着东西才能坐下&quot;,
+      &quot;我因为腰痛需要别人帮忙穿衣&quot;,
+      &quot;我因为腰痛穿衣服比平时慢&quot;,
+      &quot;我只站立很短时间以避免腰痛&quot;,
+      &quot;我因为腰痛尽量不弯腰下蹲&quot;,
+      &quot;我因为腰痛在椅子上坐立困难&quot;,
+      &quot;我的腰痛几乎总是存在&quot;,
+      &quot;我在床上翻身时感到腰痛困难&quot;,
+      &quot;我的食欲因为腰痛受到影响&quot;,
+      &quot;我因为腰痛穿袜子有困难&quot;,
+      &quot;我因为腰痛只能走很短的距离&quot;,
+      &quot;我因为腰痛睡眠质量不好&quot;,
+      &quot;我因为腰痛需要别人帮助穿衣&quot;,
+      &quot;我坐的时间长会使腰痛加重&quot;,
+      &quot;我因为腰痛做家务时经常需要休息&quot;,
+      &quot;我因为腰痛上楼时感到困难&quot;,
+      &quot;我因为腰痛工作时间减少&quot;,
+      &quot;我做任何事时都感到腰痛&quot;
+    ];
+
+    // ODI 10维度数据（中文版）
+    const ODI_SECTIONS = [
+      {
+        id: &quot;pain_intensity&quot;,
+        title: &quot;1. 疼痛程度&quot;,
+        options: [
+          { score: 0, text: &quot;我目前没有疼痛&quot; },
+          { score: 1, text: &quot;目前疼痛非常轻微&quot; },
+          { score: 2, text: &quot;目前疼痛为中度&quot; },
+          { score: 3, text: &quot;目前疼痛相当严重&quot; },
+          { score: 4, text: &quot;目前疼痛非常严重&quot; },
+          { score: 5, text: &quot;目前疼痛无法想象的最严重&quot; }
+        ]
+      },
+      {
+        id: &quot;personal_care&quot;,
+        title: &quot;2. 个人生活自理（洗漱、穿衣等）&quot;,
+        options: [
+          { score: 0, text: &quot;我可以正常照顾自己，不会引起额外疼痛&quot; },
+          { score: 1, text: &quot;我可以正常照顾自己，但会引起额外疼痛&quot; },
+          { score: 2, text: &quot;照顾自己会引起疼痛，我必须缓慢、小心地进行&quot; },
+          { score: 3, text: &quot;我需要一些帮助来完成大部分个人生活自理&quot; },
+          { score: 4, text: &quot;我每天都需要帮助来完成大部分个人生活自理&quot; },
+          { score: 5, text: &quot;我无法穿衣洗漱，只能卧床&quot; }
+        ]
+      },
+      {
+        id: &quot;lifting&quot;,
+        title: &quot;3. 提举重物&quot;,
+        options: [
+          { score: 0, text: &quot;我可以提举重物，不会引起额外疼痛&quot; },
+          { score: 1, text: &quot;我可以提举重物，但会引起额外疼痛&quot; },
+          { score: 2, text: &quot;疼痛使我无法从地板上提举重物，但如果放在方便的位置我可以提举&quot; },
+          { score: 3, text: &quot;疼痛使我无法提举重物，但中等重量的物品可以&quot; },
+          { score: 4, text: &quot;我只能提举很轻的物品&quot; },
+          { score: 5, text: &quot;我完全无法提举任何东西&quot; }
+        ]
+      },
+      {
+        id: &quot;walking&quot;,
+        title: &quot;4. 行走能力&quot;,
+        options: [
+          { score: 0, text: &quot;疼痛不影响我的行走能力&quot; },
+          { score: 1, text: &quot;疼痛使我步行超过1公里有困难&quot; },
+          { score: 2, text: &quot;疼痛使我步行超过500米有困难&quot; },
+          { score: 3, text: &quot;疼痛使我步行超过100米有困难&quot; },
+          { score: 4, text: &quot;我只能借助拐杖或扶着东西行走&quot; },
+          { score: 5, text: &quot;我大部分时间只能卧床，需要轮椅才能移动&quot; }
+        ]
+      },
+      {
+        id: &quot;sitting&quot;,
+        title: &quot;5. 坐立能力&quot;,
+        options: [
+          { score: 0, text: &quot;我可以在任何椅子上舒适地坐着&quot; },
+          { score: 1, text: &quot;我只能坐在特定的椅子上才能舒适&quot; },
+          { score: 2, text: &quot;疼痛使我坐立超过1小时有困难&quot; },
+          { score: 3, text: &quot;疼痛使我坐立超过30分钟有困难&quot; },
+          { score: 4, text: &quot;疼痛使我坐立超过10分钟有困难&quot; },
+          { score: 5, text: &quot;疼痛使我完全无法坐立&quot; }
+        ]
+      },
+      {
+        id: &quot;standing&quot;,
+        title: &quot;6. 站立能力&quot;,
+        options: [
+          { score: 0, text: &quot;我可以长时间站立，不会引起额外疼痛&quot; },
+          { score: 1, text: &quot;我可以长时间站立，但会引起额外疼痛&quot; },
+          { score: 2, text: &quot;疼痛使我站立超过1小时有困难&quot; },
+          { score: 3, text: &quot;疼痛使我站立超过30分钟有困难&quot; },
+          { score: 4, text: &quot;疼痛使我站立超过10分钟有困难&quot; },
+          { score: 5, text: &quot;我完全无法站立&quot; }
+        ]
+      },
+      {
+        id: &quot;sleeping&quot;,
+        title: &quot;7. 睡眠质量&quot;,
+        options: [
+          { score: 0, text: &quot;我的睡眠不受腰痛影响&quot; },
+          { score: 1, text: &quot;偶尔因为腰痛影响睡眠&quot; },
+          { score: 2, text: &quot;因为腰痛，每晚睡眠少于4小时&quot; },
+          { score: 3, text: &quot;因为腰痛，每晚睡眠少于2小时&quot; },
+          { score: 4, text: &quot;因为腰痛，睡眠严重不足&quot; },
+          { score: 5, text: &quot;腰痛使我完全无法入睡&quot; }
+        ]
+      },
+      {
+        id: &quot;sex_life&quot;,
+        title: &quot;8. 性生活&quot;,
+        skipAllowed: true,
+        options: [
+          { score: 0, text: &quot;我的性生活正常，不会引起额外疼痛&quot; },
+          { score: 1, text: &quot;我的性生活正常，但会引起额外疼痛&quot; },
+          { score: 2, text: &quot;我的性生活基本正常，但疼痛限制某些姿势&quot; },
+          { score: 3, text: &quot;我的性生活受了影响，因为疼痛限制了频率&quot; },
+          { score: 4, text: &quot;疼痛严重影响我的性生活&quot; },
+          { score: 5, text: &quot;疼痛使我几乎无法过性生活&quot; }
+        ]
+      },
+      {
+        id: &quot;social_life&quot;,
+        title: &quot;9. 社交活动&quot;,
+        options: [
+          { score: 0, text: &quot;我的社交生活正常，不会引起额外疼痛&quot; },
+          { score: 1, text: &quot;我的社交生活正常，但疼痛限制了某些活动（如跳舞、购物等）&quot; },
+          { score: 2, text: &quot;疼痛限制了我的社交生活，使我不能经常外出&quot; },
+          { score: 3, text: &quot;疼痛限制了我的社交活动只能在住所附近&quot; },
+          { score: 4, text: &quot;因为有疼痛，我几乎不怎么参加社交活动&quot; },
+          { score: 5, text: &quot;疼痛使我完全没有社交生活&quot; }
+        ]
+      },
+      {
+        id: &quot;traveling&quot;,
+        title: &quot;10. 旅行&quot;,
+        skipAllowed: true,
+        options: [
+          { score: 0, text: &quot;我可以去任何地方旅行，不会引起额外疼痛&quot; },
+          { score: 1, text: &quot;我可以去任何地方旅行，但会引起额外疼痛&quot; },
+          { score: 2, text: &quot;疼痛使我旅行超过2小时有困难&quot; },
+          { score: 3, text: &quot;疼痛使我旅行超过1小时有困难&quot; },
+          { score: 4, text: &quot;疼痛使我旅行超过30分钟有困难&quot; },
+          { score: 5, text: &quot;疼痛使我无法旅行，只能去医院&quot; }
+        ]
+      }
+    ];
+
+    // ============================================
+    // 页面控制函数
+    // ============================================
+    
+    let currentSection = 1;
+    
+    function updateProgress(section) {
+      const percent = (section / 3) * 100;
+      const stepTexts = [
+        &quot;步骤 1/3: 基线资料&quot;,
+        &quot;步骤 2/3: 量表评估&quot;, 
+        &quot;步骤 3/3: 完成&quot;
+      ];
+      
+      document.getElementById('progress-fill').style.width = percent + '%';
+      document.getElementById('progress-percent').textContent = Math.round(percent) + '%';
+      document.getElementById('step-text').textContent = stepTexts[section - 1];
+    }
+    
+    function goToSection(section) {
+      // Section 1 -> 2 时验证基线资料
+      if (section === 2 && currentSection === 1) {
+        if (!validateBaseline()) return;
+      }
+      
+      // 隐藏所有区块
+      document.querySelectorAll('.section').forEach(el => el.classList.add('hidden'));
+      // 显示目标区块
+      document.getElementById(`section-${section}`).classList.remove('hidden');
+      
+      // 滚动到顶部
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      currentSection = section;
+      updateProgress(section);
+    }
+    
+    function validateBaseline() {
+      const name = document.getElementById('name').value.trim();
+      const gender = document.getElementById('gender').value;
+      const age = document.getElementById('age').value;
+      const hospitalId = document.getElementById('hospital-id').value.trim();
+      const stage = document.getElementById('followup-stage').value;
+      
+      if (!name) {
+        alert('请输入患者姓名');
+        document.getElementById('name').focus();
+        return false;
+      }
+      if (!gender) {
+        alert('请选择性别');
+        document.getElementById('gender').focus();
+        return false;
+      }
+      if (!age || age < 1 || age > 120) {
+        alert('请输入有效年龄（1-120岁）');
+        document.getElementById('age').focus();
+        return false;
+      }
+      if (!hospitalId) {
+        alert('请输入住院号');
+        document.getElementById('hospital-id').focus();
+        return false;
+      }
+      if (!stage) {
+        alert('请选择随访阶段');
+        document.getElementById('followup-stage').focus();
+        return false;
+      }
+      
+      return true;
+    }
+
+    // ============================================
+    // NRS 相关函数
+    // ============================================
+    
+    function updateNRS(value) {
+      document.getElementById('nrs-value').textContent = value;
+      
+      let hint = '';
+      const v = parseInt(value);
+      if (v === 0) {
+        hint = '💙 无痛：您的疼痛感觉为0，生活不受影响';
+      } else if (v <= 3) {
+        hint = '💚 轻度疼痛：可忍受，基本不影响日常生活';
+      } else if (v <= 6) {
+        hint = '💛 中度疼痛：影响日常生活，但可完成基本活动';
+      } else if (v <= 9) {
+        hint = '🧡 重度疼痛：影响睡眠，需要药物控制';
+      } else {
+        hint = '❤️ 剧烈疼痛：无法忍受，需紧急处理';
+      }
+      
+      document.getElementById('nrs-hint').textContent = hint;
+    }
+
+    // ============================================
+    // RMDQ 相关函数
+    // ============================================
+    
+    function renderRMDQ() {
+      const container = document.getElementById('rmdq-container');
+      container.innerHTML = RMDQ_ITEMS.map((item, index) => `
+        <label class=&quot;custom-checkbox&quot;>
+          <input type=&quot;checkbox&quot; name=&quot;rmdq&quot; value=&quot;${index}&quot; onchange=&quot;updateRMDQCount()&quot;>
+          <span class=&quot;text-sm text-gray-700&quot;>${item}</span>
+        </label>
+      `).join('');
+    }
+    
+    function updateRMDQCount() {
+      const checked = document.querySelectorAll('input[name=&quot;rmdq&quot;]:checked').length;
+      document.getElementById('rmdq-count').textContent = checked;
+    }
+    
+    function calculateRMDQ() {
+      return document.querySelectorAll('input[name=&quot;rmdq&quot;]:checked').length;
+    }
+
+    // ============================================
+    // ODI 相关函数
+    // ============================================
+    
+    function renderODI() {
+      const container = document.getElementById('odi-container');
+      
+      container.innerHTML = ODI_SECTIONS.map(section => `
+        <div class=&quot;mb-6 border-b pb-4 last:border-b-0&quot;>
+          <div class=&quot;mb-3&quot;>
+            <h3 class=&quot;font-medium text-gray-800&quot;>${section.title}</h3>
+            ${section.skipAllowed ? '<p class=&quot;skip-hint text-gray-400&quot;>（如不适用可跳过此题）</p>' : ''}
+          </div>
+          <div class=&quot;radio-group&quot;>
+            ${section.options.map(opt => `
+              <label class=&quot;radio-option&quot; onclick=&quot;selectODIOption('${section.id}', ${opt.score}, this)&quot;>
+                <input type=&quot;radio&quot; name=&quot;odi_${section.id}&quot; value=&quot;${opt.score}&quot;>
+                <div>
+                  <span class=&quot;text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded mr-2&quot;>
+                    ${opt.score}分
+                  </span>
+                  <span class=&quot;text-sm text-gray-700&quot;>${opt.text}</span>
+                </div>
+              </label>
+            `).join('')}
+            ${section.skipAllowed ? `
+              <label class=&quot;radio-option text-gray-400 italic&quot; onclick=&quot;skipODISection('${section.id}', this)&quot;>
+                <input type=&quot;radio&quot; name=&quot;odi_${section.id}&quot; value=&quot;skip&quot;>
+                <span class=&quot;text-sm&quot;>不适用 / 跳过此题</span>
+              </label>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function selectODIOption(sectionId, score, element) {
+      // 移除同组其他选项的选中状态
+      element.parentElement.querySelectorAll('.radio-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      // 添加当前选中状态
+      element.classList.add('selected');
+    }
+    
+    function skipODISection(sectionId, element) {
+      // 移除同组其他选项的选中状态
+      element.parentElement.querySelectorAll('.radio-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      // 添加当前选中状态
+      element.classList.add('selected');
+    }
+    
+    function calculateODI() {
+      let totalScore = 0;
+      let validSections = 0;
+      
+      ODI_SECTIONS.forEach(section => {
+        const radioGroup = document.querySelectorAll(`input[name=&quot;odi_${section.id}&quot;]`);
+        let sectionScore = null;
+        
+        radioGroup.forEach(radio => {
+          if (radio.checked) {
+            if (radio.value === 'skip') {
+              sectionScore = 'skipped';
+            } else {
+              sectionScore = parseInt(radio.value);
+            }
+          }
+        });
+        
+        if (sectionScore !== null && sectionScore !== 'skipped') {
+          totalScore += sectionScore;
+          validSections++;
+        }
+      });
+      
+      // ODI% = (总分 / (有效题目数 × 5)) × 100%
+      if (validSections === 0) {
+        return { percentage: 0, validSections: 0, totalScore: 0 };
+      }
+      
+      const maxPossible = validSections * 5;
+      const percentage = (totalScore / maxPossible) * 100;
+      
+      return {
+        percentage: percentage.toFixed(1),
+        validSections: validSections,
+        totalScore: totalScore,
+        maxPossible: maxPossible
+      };
+    }
+
+    // ============================================
+    // 提交与数据处理
+    // ============================================
+    
+    async function submitAssessment() {
+      const btn = document.getElementById('submit-btn');
+      
+      // 验证 ODI 至少回答了必填题
+      const odiResult = calculateODI();
+      if (odiResult.validSections < 8) {
+        alert('请至少完成ODI量表的前8项必填题目（性生活、旅行可跳过）');
+        return;
+      }
+      
+      // 显示 loading 状态
+      btn.disabled = true;
+      btn.innerHTML = '<div class=&quot;spinner&quot;></div><span>正在提交...</span>';
+      
+      // 收集数据
+      const formData = {
+        // 基线资料
+        baseline: {
+          name: document.getElementById('name').value.trim(),
+          gender: document.getElementById('gender').value,
+          age: parseInt(document.getElementById('age').value),
+          hospitalId: document.getElementById('hospital-id').value.trim(),
+          followupStage: document.getElementById('followup-stage').value,
+          assessmentDate: new Date().toISOString()
+        },
+        
+        // 量表数据
+        assessments: {
+          nrs: {
+            score: parseInt(document.getElementById('nrs-slider').value),
+            interpretation: getNRSInterpretation(parseInt(document.getElementById('nrs-slider').value))
+          },
+          rmdq: {
+            score: calculateRMDQ(),
+            maxScore: 24,
+            percentage: ((calculateRMDQ() / 24) * 100).toFixed(1)
+          },
+          odi: {
+            totalScore: odiResult.totalScore,
+            validSections: odiResult.validSections,
+            maxPossible: odiResult.maxPossible,
+            percentage: odiResult.percentage
+          }
+        }
+      };
+      
+      // 详细 ODI 答题情况
+      formData.assessments.odi.details = {};
+      ODI_SECTIONS.forEach(section => {
+        const selected = document.querySelector(`input[name=&quot;odi_${section.id}&quot;]:checked`);
+        if (selected) {
+          formData.assessments.odi.details[section.id] = selected.value === 'skip' ? 'skipped' : parseInt(selected.value);
+        }
+      });
+      
+      // RMDQ 详细答题情况
+      formData.assessments.rmdq.details = [];
+      document.querySelectorAll('input[name=&quot;rmdq&quot;]:checked').forEach(cb => {
+        formData.assessments.rmdq.details.push(parseInt(cb.value));
+      });
+      
+      // [方案 A] Console 输出 JSON
+      console.log('========================================');
+      console.log('腰椎功能评估数据 (JSON)');
+      console.log('========================================');
+      console.log(JSON.stringify(formData, null, 2));
+      
+      // [方案 B] 发送到后端 API（框架代码）
+      try {
+        // await submitToAPI(formData);
+        console.log('提示：API提交函数已准备好，请配置 API Key 后启用');
+      } catch (error) {
+        console.error('提交失败:', error);
+      }
+      
+      // 模拟网络延迟
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // 更新结果页面
+      document.getElementById('result-nrs').textContent = formData.assessments.nrs.score + ' / 10';
+      document.getElementById('result-rmdq').textContent = formData.assessments.rmdq.score + ' / 24 (' + formData.assessments.rmdq.percentage + '%)';
+      document.getElementById('result-odi').textContent = odiResult.percentage + '%';
+      
+      // 跳转到结果页面
+      goToSection(3);
+      
+      // 恢复按钮
+      btn.disabled = false;
+      btn.innerHTML = '<span>✓ 提交评估</span>';
+    }
+    
+    function getNRSInterpretation(score) {
+      if (score === 0) return '无痛';
+      if (score <= 3) return '轻度疼痛';
+      if (score <= 6) return '中度疼痛';
+      if (score <= 9) return '重度疼痛';
+      return '剧烈疼痛';
+    }
+    
+    /**
+     * [方案 B] 发送数据到 Supabase REST API
+     * 使用方法：
+     * 1. 在 Supabase 创建表，包含上述字段结构
+     * 2. 替换 SUPABASE_URL 和 SUPABASE_ANON_KEY
+     * 3. 在 submitAssessment() 中取消此函数的注释
+     */
+    async function submitToAPI(data) {
+      const SUPABASE_URL = 'YOUR_SUPABASE_URL';  // 如: https://xxx.supabase.co
+      const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY'; // Supabase > Settings > API > anon public
+      
+      const response = await fetch(`${SUPABASE_URL}/rest/v1/assessments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(data)
+      });
+      
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status}`);
+      }
+      
+      return response;
+    }
+    
+    function resetForm() {
+      // 重置所有表单字段
+      document.getElementById('name').value = '';
+      document.getElementById('gender').value = '';
+      document.getElementById('age').value = '';
+      document.getElementById('hospital-id').value = '';
+      document.getElementById('followup-stage').value = '';
+      document.getElementById('nrs-slider').value = 0;
+      updateNRS(0);
+      
+      // 重置 RMDQ
+      document.querySelectorAll('input[name=&quot;rmdq&quot;]').forEach(cb => cb.checked = false);
+      updateRMDQCount();
+      
+      // 重置 ODI
+      document.querySelectorAll('input[name^=&quot;odi_&quot;]').forEach(r => r.checked = false);
+      document.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('selected'));
+      
+      // 返回第一页
+      goToSection(1);
+    }
+
+    // ============================================
+    // 初始化
+    // ============================================
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      renderRMDQ();
+      renderODI();
+      updateProgress(1);
+    });
+  </script>
+</body>
+</html>
+" style="width: 100%; max-width: 720px; height: 600px; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);"></iframe>
+    
+  </div>
+
+  <hr>
+
+  <h3 id="method1">3.1 方法一：IDE 对话式编程（Cursor）</h3>
+  <div class="method-card">
+    <div>
+      <div class="method-title">Cursor + Claude/GPT-4o</div>
+      <div class="method-sub">在代码编辑器中与 AI 对话，实时生成并修改代码</div>
+    </div>
+    <span class="tool-tag">推荐人群：有前端基础、需要精细控制的开发者</span>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">1</span>打开 Cursor，新建 HTML 文件</div>
+    <div class="step-body">在 Cursor 中创建 <code>index.html</code>，按 <code>Ctrl+K</code> 打开 AI 对话窗口。</div>
+  </div>
+  <div class="step-card">
+    <div class="step-title"><span class="num">2</span>描述需求</div>
+    <div class="step-body">
+      输入需求描述：<br>
+      <code>"我需要制作一个腰椎功能评估系统的HTML页面，包含三个部分：①基线资料（姓名、性别、年龄、住院号、随访阶段）；②量表评估（NRS疼痛评分滑块0-10、RMDQ 24条目勾选、ODI 10维度单选）；③提交后显示结果摘要。使用Tailwind CSS样式，移动端优先。"</code>
+    </div>
+  </div>
+  <div class="step-card">
+    <div class="step-title"><span class="num">3</span>AI 生成初始代码</div>
+    <div class="step-body">Cursor 内的 AI 根据需求生成完整 HTML。可在编辑器中实时查看，并通过 Live Preview 或右键「Open in Browser」预览效果。</div>
+  </div>
+  <div class="step-card">
+    <div class="step-title"><span class="num">4</span>迭代修改与调试</div>
+    <div class="step-body">
+      发现问题时直接在对话中描述修改要求：<br>
+      <code>"RMDQ条目换成中文描述版本"</code><br>
+      <code>"NRS滑块加上颜色渐变，0绿色→5黄色→10红色"</code><br>
+      <code>"进度条指示当前在第几步"</code><br>
+      AI 逐条响应修改，<strong>每次修改都可立即预览</strong>。
+    </div>
+  </div>
+  <div class="step-card">
+    <div class="step-title"><span class="num">5</span>完成并保存</div>
+    <div class="step-body">反复迭代直到满足需求，保存文件。全程约 <strong>15-30 分钟</strong>。</div>
+  </div>
+
+  <div class="img-wrapper">
+    <img src="screenshot_cursor.png" alt="Cursor AI IDE界面">
+    <div class="caption">图2 · Cursor AI 编程界面</div>
+  </div>
+
+  <div class="analysis-card">
+    <div class="analysis-title">图2 详解 · Cursor AI 操作界面解析</div>
+
+    <div class="analysis-section">
+      <div class="analysis-subtitle">一、界面布局解析</div>
+      <div class="analysis-note" style="margin-bottom:14px;">
+        Cursor 延续了 VS Code 的操作习惯，但在右侧加入了核心的 AI 交互区。以下对四个区域逐一说明：
+      </div>
+      <div class="layout-grid">
+        <div class="layout-item">
+          <div class="label">左侧</div>
+          <div class="text"><strong>资源管理器（Sidebar）</strong><br>
+          展示项目文件树。从图中可见这是一个基于 VitePress 的文档项目（包含 .vitepress、docs-zh 等文件夹），文件结构清晰，便于 AI 理解项目全貌。</div>
+        </div>
+        <div class="layout-item">
+          <div class="label green">中间</div>
+          <div class="text"><strong>编辑器主视图（Editor Area）</strong><br>
+          当前正在编辑 cursor-introduction.md。代码中已包含对 Cursor 功能的分级介绍（入门、进阶、高级），体现了 Cursor 对文档协作的支持。</div>
+        </div>
+        <div class="layout-item">
+          <div class="label amber">底部</div>
+          <div class="text"><strong>终端与状态栏（Terminal & Status）</strong><br>
+          显示了 pnpm 命令的运行状态，表明 AI 正在尝试通过自动化脚本更新项目。终端可实时查看执行日志。</div>
+        </div>
+        <div class="layout-item">
+          <div class="label purple">右侧</div>
+          <div class="text"><strong>Composer（核心区）</strong><br>
+          图中最重要的部分。COMPOSER 模式允许 AI 同时理解和修改多个文件。<strong>Checkpoint（检查点）</strong>：每一个操作步骤（如"修改提示框样式"）都有备份，支持一键还原（Restore），大大降低了 AI 误改代码的风险。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="analysis-section">
+      <div class="analysis-subtitle">二、核心功能特点</div>
+      <div class="analysis-note" style="margin-bottom:14px;">
+        通过这张截图，我们可以总结出 Cursor 的三大"杀手锏"：
+      </div>
+
+      <div class="feature-item">
+        <div class="f-title">1. 跨文件协同处理（Composer Mode）</div>
+        <div class="f-body">
+          传统的 AI 插件只能修改当前光标所在的一行或一个文件，而截图右侧显示 AI 正在处理 <code>cursor-introduction.md</code> 和 <code>element-plus_es_components_...</code> 等多个文件。<br><br>
+          逻辑：它不是在"写代码建议"，而是在<strong>"执行任务"</strong>。
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="f-title">2. 代理模式（Agentic Workflow）</div>
+        <div class="f-body">
+          右下角的输入框显示 <code>Ask agent to do anything</code>。在 Agent 模式下，AI 会自主思考步骤。例如图中显示的"让我修复一下编码问题"，AI 会自动搜索相关文件、诊断错误、尝试修复并运行测试。
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="f-title">3. 上下文感知（@ 符号）</div>
+        <div class="f-body">
+          输入框提示 <code>@ to mention</code>。把 @ 想象成<strong>"点名"</strong>：<br>
+          <code>@Files</code> → 点名某个文件让 AI 看。<br>
+          <code>@Docs</code> → 点名某个官方文档（如 VitePress 文档）让 AI 学。<br>
+          <code>@Codebase</code> → 让 AI 扫描整个项目，像一个熟读你所有病历的资深医生一样给出诊断。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <strong>关键优势：</strong>手把手对话式协作，每步修改都可预览。<br>
+    <strong>局限性：</strong>需要手动引导每一步，自动化程度较低。
+  </div>
+
+  <hr>
+
+  <!-- ===== 方法二 ===== -->
+  <h3 id="method2">3.2 方法二：AI Agent 命令行（Hermes Agent）</h3>
+  <div class="method-card">
+    <div>
+      <div class="method-title">Hermes Agent</div>
+      <div class="method-sub">在终端中下发任务，AI Agent 自动完成从代码生成到调试的完整流程</div>
+    </div>
+    <span class="tool-tag">推荐人群：熟悉命令行、希望自动化程度更高的开发者</span>
+  </div>
+
+  <!-- ===== Hermes 介绍与安装 ===== -->
+  <div class="img-wrapper" style="margin-top: 24px; margin-bottom: 20px;">
+    <img src="hermes_logo.png" alt="Hermes Agent 官方 Logo" style="max-height: 200px; object-fit: contain; padding: 30px; background: #0f172a;">
+    <div class="caption">Hermes Agent — Nous Research 出品的自主进化 AI Agent</div>
+  </div>
+
+  <p><strong>Hermes Agent</strong> 是由 <strong>Nous Research</strong> 构建的自主 AI 代理。和 Cursor 这类需要手把手引导的 IDE 插件不同，Hermes Agent 的核心定位是<strong>「自主干活」</strong>——你只需下发一次任务，它就能自主完成需求分析、代码生成、语法检查、错误修复、文件创建等全流程，几乎不需要人工干预。</p>
+
+  <p>它的特殊之处在于<strong>内置了学习循环</strong>：每次解决问题后会自动总结经验（Skills），在下次遇到类似任务时可以直接复用；跨会话的持久记忆（Memory）让它越来越了解你的偏好和项目；支持部署到 Telegram、微信、Discord 等平台，你甚至可以在手机上查看云端 VPS 上的 Agent 工作进度。</p>
+
+  <p>同类工具中比较有代表性的还有 <strong>Claude Code</strong>（Anthropic 官方出品）和 <strong>OpenClaw</strong>（社区开源）。区别在于：Claude Code 绑定 Anthropic 的模型和生态，如果你的需求是写 Python 或前端且不介意固定用 Claude，它也是不错的选择；OpenClaw 作为一个新晋的开源 Agent 框架，有自己的 Skills 商店生态，社区活跃度也不错。之所以这次选 Hermes，主要是因为它<strong>不绑定任何模型提供商</strong>（可以用 DeepSeek、OpenRouter、SiliconFlow 等，灵活性和成本可控），<strong>内置的 Memory 和 Skills 系统更成熟</strong>（每次对话都在积累，不是用完就丢），而且<strong>支持接入微信和 Telegram 等日常通讯工具</strong>——对临床场景来说，在手机上看看进度、收个通知比守在电脑前方便得多。</p>
+
+  <p>更详细的说明请参考 <strong><a href="https://hermes-agent.nousresearch.com/docs/" target="_blank">官方文档 →</a></strong></p>
+
+  <h4>安装方法</h4>
+
+  <div class="callout callout-warn">
+    <strong>注意：</strong>Hermes Agent <strong>不支持原生 Windows</strong>，需要先安装 <a href="https://learn.microsoft.com/zh-cn/windows/wsl/install" target="_blank">WSL2</a>。以下命令在 WSL2 终端或 Linux / macOS 终端中执行。
+  </div>
+
+  <p><strong>一键安装（推荐）：</strong>打开终端，粘贴并执行以下命令：</p>
+
+<pre>curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</pre>
+
+  <p>安装脚本会自动处理所有依赖（Python、Node.js、ripgrep、ffmpeg），克隆仓库，创建虚拟环境并设置全局 <code>hermes</code> 命令。整个过程大约 1-2 分钟。</p>
+
+  <p><strong>安装完成后：</strong>刷新 shell 配置并启动：</p>
+
+<pre>source ~/.bashrc   # 如果用 zsh 则: source ~/.zshrc
+hermes             # 启动对话</pre>
+
+  <p>如需重新配置（如更换模型或提供商），运行：</p>
+
+<pre>hermes setup</pre>
+
+  <p>首次启动时会引导你完成 <strong>LLM 提供商配置</strong>（推荐选择 OpenRouter、Anthropic Claude 或 SiliconFlow），同样是交互式的，跟着提示走即可。配置完成后，就可以像下面的演示一样，用自然语言直接下达编程任务了。</p>
+
+  <p>如果后续想更换模型（比如切换到 DeepSeek V4 Flash），通过 <code>hermes setup</code> 重新配置即可。以 DeepSeek V4 Flash 为例：</p>
+  <ul>
+    <li>到 <a href="https://platform.deepseek.com/api_keys" target="_blank">platform.deepseek.com/api_keys</a> 注册账号并创建 API Key</li>
+    <li>在 <code>hermes setup</code> 的提供商选择中选 <strong>DeepSeek</strong></li>
+    <li>填入你拿到的 API Key</li>
+    <li>模型名称填写 <code>deepseek-v4-flash</code></li>
+  </ul>
+  <p>其他提供商大同小异——去对应官网拿 API Key，回终端配置时选对提供商、填对模型名就行。免费额度通常够完成本次任务。</p>
+
+  <div class="callout callout-tip">
+    <strong>安装完成了吗？</strong>下面我们以「腰椎功能评估系统」为例，演示 Hermes Agent 的完整工作流程——从下达任务到生成可运行代码，全程只需一段自然语言描述。
+  </div>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">1</span>进入 Agent 对话环境</div>
+    <div class="step-body">如果你已经完成安装，终端输入 <code>hermes</code> 即可进入 Agent 对话界面。你会看到类似下图的交互环境：</div>
+  </div>
+
+  <div class="img-wrapper" style="margin-bottom: 24px;">
+    <img src="hermes_terminal.png" alt="Hermes Agent 终端交互界面" style="border-radius: 8px;">
+    <div class="caption">图解 · Hermes Agent 终端自动化编程交互</div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">2</span>下达一次性任务</div>
+    <div class="step-body">
+      用自然语言描述完整需求（一段话闭环）：
+<pre><span class="comment">"帮我生成一个腰椎功能评估系统的HTML页面。
+要求：
+1. 基线资料收集：姓名、性别、年龄、住院号、随访阶段
+2. 量表评估：NRS疼痛数字评分（0-10滑块）、RMDQ中文24条目勾选、
+   ODI 10维度单选（每维度6个等级）
+3. 提交后显示结果摘要
+4. 使用Tailwind CSS CDN，移动端适配
+5. 分步骤切换，底部有进度指示条"</span></pre>
+    </div>
+  </div>
+  <div class="step-card">
+    <div class="step-title"><span class="num">3</span>Agent 自动执行</div>
+    <div class="step-body">
+      Hermes Agent 自主完成以下工作：理解需求 → 生成完整 HTML → 检查语法并修复 → 创建文件 → 如果报错则自动读取错误信息并修复。整个过程<strong>无需人工干预</strong>。
+    </div>
+  </div>
+  <div class="step-card">
+    <div class="step-title"><span class="num">4</span>审查与微调</div>
+    <div class="step-body">
+      Agent 完成后审查代码。如需调整：<br>
+      <code>"NRS滑块的提示文字改成中文版疼痛等级描述"</code><br>
+      <code>"ODI第8项（性生活）加一个'不适用'按钮"</code><br>
+      Agent 自动定位代码并完成修改。
+    </div>
+  </div>
+  <div class="step-card">
+    <div class="step-title"><span class="num">5</span>完成</div>
+    <div class="step-body">最终输出完整 <code>index.html</code> 文件。全程约 <strong>5-15 分钟</strong>，大部分时间在等待 Agent 自主工作。</div>
+  </div>
+
+  <div class="callout callout-tip">
+    <strong>关键优势：</strong>自动化程度高，一次下达任务即可获得完整输出。<br>
+    <strong>局限性：</strong>对模糊需求的理解可能偏离预期，需要后续纠正。
+  </div>
+
+  <hr>
+
+  <!-- ===== 方法三 ===== -->
+  <h3 id="method3">3.3 方法三：多模态生成</h3>
+  <div class="method-card">
+    <div>
+      <div class="method-title">截图 / 手绘草图 → Claude / GPT-4o</div>
+      <div class="method-sub">通过视觉输入（截图、手绘线框图）让 AI 理解你的界面意图并生成代码</div>
+    </div>
+    <span class="tool-tag">推荐人群：习惯画图表达、不擅长文字描述需求的开发者</span>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">1</span>绘制界面草图</div>
+    <div class="step-body">
+      在纸上绘出你想要的页面布局，拍照或截图保存为图片。为了演示“同一任务场景”，这里展示的是腰椎功能评估系统初始版本的界面草图设计：
+    </div>
+  </div>
+
+  <div class="img-wrapper">
+    <img src="sketch_wireframe.png" alt="手绘线框图示例" style="max-height: none; object-fit: contain; object-position: top; width: auto; max-width: 100%; margin: 0 auto;">
+    <div class="caption">图3 · 手绘线框图转代码</div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">2</span>上传图片给 AI</div>
+    <div class="step-body">
+      打开 Claude 或 GPT-4o，将草图上传并附加文字说明：<br>
+      <code>"这是我手绘的腰椎功能评估系统草图，请根据这个布局生成完整的HTML页面。NRS评分用0-10滑块，RMDQ用24项中文版条目勾选，ODI用10维度单选。使用Tailwind CSS CDN，移动端适配。"</code>
+    </div>
+  </div>
+  <div class="step-card">
+    <div class="step-title"><span class="num">3</span>AI 根据视觉理解生成代码</div>
+    <div class="step-body">
+      AI 同时理解图片中的<strong>视觉布局</strong>和文字中的<strong>功能描述</strong>。相比纯文字描述，多模态的优势在于：<strong>布局意图一目了然</strong>——比如"左侧标签、右侧输入框"这种空间关系，一张图胜过一百个字。
+    </div>
+  </div>
+  <div class="step-card">
+    <div class="step-title"><span class="num">4</span>迭代修改</div>
+    <div class="step-body">
+      如果生成效果不理想：上传修改后的草图让 AI 重新理解，或补充文字描述："把表单改成两列布局"，或直接截图当前效果："按钮位置不对，挪到底部居中"。
+    </div>
+  </div>
+  <div class="step-card">
+    <div class="step-title"><span class="num">5</span>完成</div>
+    <div class="step-body">从图片到代码，全程耗时约 <strong>10-20 分钟</strong>。适合对布局有明确视觉想法、但文字表达不够精确的场景。</div>
+  </div>
+
+  <div class="callout callout-tip">
+    <strong>关键优势：</strong>视觉输入高效传达布局意图，适合界面设计导向的任务。<br>
+    <strong>局限性：</strong>对复杂交互逻辑的理解不如文字精确。
+  </div>
+
+  <hr>
+
+  <!-- ===== 横评对比 ===== -->
+  <h3 id="compare">4. 三种方法横评对比</h3>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>对比维度</th>
+        <th>IDE 对话式 (Cursor)</th>
+        <th>AI Agent 命令行 (Hermes)</th>
+        <th>多模态生成</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>学习成本</strong></td>
+        <td><span class="rating-mid">中等</span><br>需熟悉 Cursor 界面和 AI 对话节奏</td>
+        <td><span class="rating-high">较低</span><br>只需会打开终端、输入需求</td>
+        <td><span class="rating-high">最低</span><br>画图谁都会</td>
+      </tr>
+      <tr>
+        <td><strong>可控性</strong></td>
+        <td><span class="rating-high">最高</span><br>每一步可预览、可干预、可回退</td>
+        <td><span class="rating-mid">中等</span><br>Agent 自主决策，结果可能偏离预期</td>
+        <td><span class="rating-low">较低</span><br>视觉输入后细节由 AI 自行脑补</td>
+      </tr>
+      <tr>
+        <td><strong>迭代速度</strong></td>
+        <td><span class="rating-mid">中等</span><br>每次修改需手动引导 AI</td>
+        <td><span class="rating-high">最快</span><br>一次下发，Agent 自动跑完</td>
+        <td><span class="rating-mid">中等</span><br>迭代需重新上传图片或补充文字</td>
+      </tr>
+      <tr>
+        <td><strong>复杂逻辑处理</strong></td>
+        <td><span class="rating-high">强</span><br>分步引导可逐一攻克复杂需求</td>
+        <td><span class="rating-mid">中等</span><br>高度依赖 Agent 理解能力</td>
+        <td><span class="rating-low">较弱</span><br>适合界面布局，不适合复杂交互</td>
+      </tr>
+      <tr>
+        <td><strong>调试难度</strong></td>
+        <td><span class="rating-high">最低</span><br>边改边看，即时反馈</td>
+        <td><span class="rating-mid">中等</span><br>Agent 自动调试，出错需人工回看</td>
+        <td><span class="rating-mid">中等</span><br>生成的代码出 bug 需人工审查</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-info">
+    <strong>小结：</strong>没有"最好"的方法，只有"最适合当前场景"的方法。<br>
+    — 精细控制选 <strong>IDE 对话式</strong> · — 快速出活选 <strong>AI Agent 命令行</strong> · — 视觉导向选 <strong>多模态生成</strong>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- 第二部分 -->
+<!-- ============================================ -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="number">第二部分</div>
+    <h2>了解 GitHub</h2>
+  </div>
+
+  <div class="callout callout-info">
+    <strong>一句话总结：</strong>GitHub 是一个<strong>「代码朋友圈」</strong>——你把你写的 HTML 文件发上去，全世界都能看见、下载、以及帮你改进。
+  </div>
+
+  <h3 id="git-concept">5.1 为什么要用 GitHub？</h3>
+  <p>
+    假设你写了一个腰椎功能评估工具 <code>index.html</code>，存在你电脑桌面上：<br>
+    ① 电脑坏了 → 文件没了<br>
+    ② 你的同学想用 → 你得用 U 盘拷给他<br>
+    ③ 你改了新版，同学拿的还是旧版 → 混乱<br>
+    ④ 你和同学一起改同一个文件 → 谁覆盖了谁说不清
+  </p>
+  <p>
+    GitHub 就是来解决这 4 个问题的——它像一个<strong>自带"时光机"的云盘</strong>，你每改一版，它都帮你记着，而且随时可以回到之前的版本。
+  </p>
+
+  <h3 id="git-analogy">5.2 GitHub 的核心概念（用日常生活类比）</h3>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">1</span>仓库（Repository / 简称 Repo）</div>
+    <div class="step-body">
+      = <strong>一个项目的文件夹</strong>。就像你的一个课题有一个文件夹（里面放论文、数据、图表），GitHub 上的一个仓库就是放一个项目所有代码的地方。<br>
+      例子：你的"腰椎功能评估工具"项目 → 一个仓库。<br>
+      建议命名规则：小写 + 短横线，如 <code>lumbar-assessment</code>。
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">2</span>提交（Commit）</div>
+    <div class="step-body">
+      = <strong>给你的文件拍一张快照</strong>。<br>
+      想象你在写病历——每次病程记录就是一次 commit：<br>
+      <code>"commit 1: 初次录入患者信息"</code> → <code>"commit 2: 添加了ODI评分表"</code> → <code>"commit 3: 修复了滑块显示Bug"</code><br>
+      任何时候都可以翻回去看"三天前的版本长什么样"。每个 commit 都要写一句说明（就像病程记录的标题）。
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">3</span>版本历史（History）</div>
+    <div class="step-body">
+      = <strong>所有 commit 组成的修改记录</strong>。<br>
+      就像你写论文时的"修订历史"，但是更清晰——每一条都写了谁、什么时间、改了什么东西。可以随时"回到过去"。
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">4</span>GitHub = "代码朋友圈"</div>
+    <div class="step-body">
+      <ul>
+        <li>你写的代码上传到 GitHub → 等于"发了一条朋友圈"</li>
+        <li>你的同学/导师/全世界的人可以看到 → 等于"能看到你的动态"</li>
+        <li>别人可以下载你的代码 → 等于"保存了你的照片"</li>
+        <li>别人可以帮你改代码（Pull Request）→ 等于"在你的动态下面提修改建议"</li>
+      </ul>
+      <strong>本质：</strong>GitHub 是社交网站，只不过大家晒的不是照片，而是代码。
+    </div>
+  </div>
+
+  <h3 id="git-steps" style="margin-top: 36px;">5.3 手把手操作：从零到上传你的第一个项目</h3>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">1</span>注册 GitHub 账号</div>
+    <div class="step-body">
+      打开浏览器，访问 <a href="https://github.com" target="_blank">github.com</a>，点击右上角 <strong>Sign up</strong>：<br>
+      · 输入你的邮箱（推荐学校邮箱或 Gmail）<br>
+      · 设置一个用户名（这个就是你 GitHub 上的"名字"，别人会通过它找到你——建议用你名字的拼音，如 <code>jiongbin-deng</code>）<br>
+      · 设置密码<br>
+      · 完成邮箱验证（GitHub 会发一封验证邮件到你的邮箱，点击里面的按钮即可）<br>
+      · 验证通过后，你会在浏览器里看到 GitHub 的主页面——一个大大的代码世界
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">2</span>创建一个仓库（放你的项目）</div>
+    <div class="step-body">
+      登录后，在任意页面，点击右上角的 <strong>+</strong> 号 → <strong>New repository</strong>：<br>
+      · <strong>Repository name</strong>：输入仓库名，比如 <code>lumbar-assessment</code>（小写字母、短横线连接）<br>
+      · <strong>Description（可选）</strong>：写一句你的项目是干什么的，比如 "一个用于腰椎功能评估的辅助工具"<br>
+      · <strong>Public / Private</strong>：选 <strong>Public</strong>（组会展示用，所有人都能看到；以后自己的课题数据建议用 Private）<br>
+      · <strong>Initialize this repository with a README</strong>：勾选它（会自动生成一个介绍文件）<br>
+      · 点击绿色的 <strong>Create repository</strong> → 你的第一个仓库就建好了！
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">3</span>上传你的代码文件</div>
+    <div class="step-body">
+      进入你刚创建的仓库页面：<br>
+      · 点击 <strong>Add file</strong> → <strong>Upload files</strong><br>
+      · 把你在任务中生成的 <code>index.html</code> 从电脑桌面拖到浏览器的虚线框里<br>
+      · 拖进去后，在页面底部的 "Commit changes" 区域：<br>
+      &nbsp;&nbsp;输入框写一句说明：<code>上传腰椎功能评估工具初始版本</code><br>
+      · 点击绿色的 <strong>Commit changes</strong> → 你的代码就上传成功了！
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">4</span>查看你的项目页面</div>
+    <div class="step-body">
+      上传成功后，仓库页面会显示你的所有文件。你会看到一个文件列表：<br>
+      · <code>README.md</code> — 项目介绍（自动生成的）<br>
+      · <code>index.html</code> — 你的腰椎功能评估工具<br>
+      · 点击 <code>index.html</code> 可以查看代码内容<br>
+      · 你的项目地址是：<code>https://github.com/你的用户名/仓库名</code><br>
+      · 把这个链接发给你的同学/导师，他们就可以看到你的项目了！
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">5</span>下载别人的代码（反向操作）</div>
+    <div class="step-body">
+      如果有人分享给你一个 GitHub 仓库链接：<br>
+      · 打开那个链接<br>
+      · 点击绿色的 <strong>Code</strong> 按钮<br>
+      · 选择 <strong>Download ZIP</strong><br>
+      · 解压下载的压缩包 → 里面就是完整的项目文件<br>
+      · 双击 <code>index.html</code> → 浏览器打开，直接可用
+    </div>
+  </div>
+
+  <div class="img-wrapper">
+    <img src="screenshot_github.png" alt="GitHub仓库页面截图">
+    <div class="caption">图4 · GitHub 仓库页面示例——左边文件列表，右边操作按钮</div>
+  </div>
+
+  <h3 id="git-benefits">5.4 这对我们有什么用？</h3>
+  <div class="callout callout-info">
+    <p style="margin-bottom: 8px;">
+      把代码放到 GitHub 上，有几个可能的好处：
+    </p>
+    <ul>
+      <li><strong>换电脑不丢代码：</strong>随访工具、评估页面存在 GitHub 上，到哪都能拉下来用</li>
+      <li><strong>团队共享：</strong>组里谁写了什么工具，所有人都能直接用，不用各自重复造轮子</li>
+      <li><strong>简历加分：</strong>找工作或申博时把 GitHub 链接放简历上，直观体现"科研+代码"能力</li>
+      <li><strong>论文发表：</strong>不少期刊现在鼓励将分析代码和工具公开，作为研究透明性和可复现性的证明</li>
+    </ul>
+  </div>
+
+  <h3 id="git-cheatsheet">5.5 快速参考：常用操作速查</h3>
+  <table class="tool-table">
+    <tr><th>你想做什么</th><th>怎么做（用浏览器就行）</th></tr>
+    <tr><td>把代码传到网上</td><td>GitHub 网页 → Add file → Upload files → 拖入文件 → Commit changes</td></tr>
+    <tr><td>让别人看到你的项目</td><td>直接把 <code>github.com/你的用户名/仓库名</code> 发给他</td></tr>
+    <tr><td>下载别人的项目</td><td>打开那个仓库 → Code → Download ZIP</td></tr>
+  </table>
+
+  <div class="callout callout-info">
+    <strong>一点说明：</strong>以上操作均使用浏览器网页完成，不需要接触命令行。如果后续想进一步学习 Git 命令行操作（<code>git add</code>、<code>git commit</code>、<code>git push</code>），可以在此基础上继续探索。今天可以先试着做到：<strong>把第一个代码项目上传到 GitHub</strong>。
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- 第三部分 -->
+<!-- ============================================ -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="number">第三部分</div>
+    <h2>实战任务：实验入组自动纳排工具</h2>
+    <p class="desc">请在一周内选择感兴趣的编程方法完成以下任务，下次组会汇报交流。</p>
+  </div>
+
+  <h3 id="task-bg">6.1 任务背景与目标</h3>
+  <p>
+    临床研究中，实验入组的<strong>纳入/排除标准判断</strong>是一个高频且容易出错的环节。
+    这个任务可以尝试制作一个<strong>入组自动纳排前端工具</strong>，输入患者的基本信息后，
+    自动判断是否符合你<strong>自己的课题</strong>的纳排标准。
+  </p>
+
+  <div class="callout callout-info">
+    <strong>核心功能流：</strong>患者基本信息 → 点击"判断入组" → 系统自动逐条核对纳排标准 → 绿色"符合条件" / 红色"不符合"并列出具体未达标项。
+  </div>
+
+  <h3 id="task-req">6.2 功能要求清单</h3>
+  <ul class="req-list">
+    <li>
+      <span class="req-num">1</span>
+      <span class="req-text"><strong>基本信息表单</strong> — 至少包含：姓名、年龄、性别、诊断、住院号/病历号。可根据课题需要增加字段。</span>
+    </li>
+    <li>
+      <span class="req-num">2</span>
+      <span class="req-text"><strong>纳入标准配置</strong> — 在代码中预设 3-5 条纳入标准（如年龄范围、诊断符合等），每条标准对应一个判断条件。</span>
+    </li>
+    <li>
+      <span class="req-num">3</span>
+      <span class="req-text"><strong>排除标准配置</strong> — 预设 2-4 条排除标准（如合并严重疾病、既往手术史等），与纳入标准分开列出。</span>
+    </li>
+    <li>
+      <span class="req-num">4</span>
+      <span class="req-text"><strong>自动判断逻辑</strong> — 点击按钮后逐条核对所有标准，每条标准显示"通过"或"不符合"，最终汇总"入组通过"或"不符合入组条件"。</span>
+    </li>
+    <li>
+      <span class="req-num">5</span>
+      <span class="req-text"><strong>结果展示</strong> — 通过/不通过的条目用不同颜色区分，并给出整体结论。</span>
+    </li>
+    <li>
+      <span class="req-num">6</span>
+      <span class="req-text"><strong>界面要求</strong> — 移动端适配，一个页面内完成，使用 Tailwind CSS CDN。样式简洁清晰。</span>
+    </li>
+  </ul>
+
+  <div style="background: #f8fafc; border: 1px dashed var(--border); border-radius: 6px; padding: 12px 16px; margin-top: 10px; font-size: 13px; color: #64748b; line-height: 1.7;">
+    <strong>术语注释：</strong><br>
+    · <strong>Tailwind CSS</strong> — 一个实用的 CSS 框架，通过预设的 class（如 <code>text-xl</code> 表示大号字体、<code>font-bold</code> 表示加粗）快速美化页面，不需要手写样式。<br>
+    · <strong>CDN</strong>（Content Delivery Network，内容分发网络）— 简单说就是直接引用网上链接加载 CSS 文件，不需要自己下载安装到本地。
+  </div>
+
+  <h3 id="task-template">6.3 模板代码（参考起点）</h3>
+  <p>以下是最简模板，你可以在此基础上填写自己的纳排标准，也可以完全从头开始：</p>
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;慢性非特异性腰痛 · 入组纳排工具&lt;/title&gt;
+  &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+  &lt;script&gt;
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50: &#x27;#eff6ff&#x27;, 100: &#x27;#dbeafe&#x27;, 200: &#x27;#bfdbfe&#x27;, 600: &#x27;#2563eb&#x27;, 700: &#x27;#1d4ed8&#x27;, 800: &#x27;#1e40af&#x27; },
+            incl:  { 50: &#x27;#f0fdf4&#x27;, 100: &#x27;#dcfce7&#x27;, 600: &#x27;#16a34a&#x27;, 700: &#x27;#15803d&#x27;, 800: &#x27;#166534&#x27; },
+            excl:  { 50: &#x27;#fef2f2&#x27;, 100: &#x27;#fee2e2&#x27;, 600: &#x27;#dc2626&#x27;, 700: &#x27;#b91c1c&#x27;, 800: &#x27;#991b1b&#x27; },
+          }
+        }
+      }
+    }
+  &lt;/script&gt;
+  &lt;style&gt;
+    body { font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;Noto Sans SC&quot;, &quot;PingFang SC&quot;, sans-serif; }
+    .criterion-item { transition: all 0.2s; }
+    .ref-tag { font-size: 11px; color: #94a3b8; font-style: italic; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body class=&quot;bg-slate-50 min-h-screen p-3 sm:p-4&quot;&gt;
+
+&lt;div class=&quot;max-w-2xl mx-auto space-y-4&quot;&gt;
+
+  <span class="comment">&lt;!-- ===== Header ===== --&gt;</span>
+  &lt;div class=&quot;bg-gradient-to-r from-slate-800 to-slate-700 text-white rounded-xl p-5 sm:p-6 shadow-md&quot;&gt;
+    &lt;h1 class=&quot;text-lg sm:text-xl font-bold&quot;&gt;慢性非特异性腰痛 · 入组纳排评估&lt;/h1&gt;
+    &lt;p class=&quot;text-slate-300 text-sm mt-1&quot;&gt;Chronic Non-Specific Low Back Pain — Eligibility Screening Tool&lt;/p&gt;
+    &lt;p class=&quot;text-xs text-slate-400 mt-2&quot;&gt;参考依据：Cochrane Review (2022) · NEJM (2017) · Ann Intern Med (2017) 等&lt;/p&gt;
+  &lt;/div&gt;
+
+  <span class="comment">&lt;!-- ===== Section 1: 患者基本信息 ===== --&gt;</span>
+  &lt;div class=&quot;bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm&quot;&gt;
+    &lt;h2 class=&quot;text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2&quot;&gt;
+      &lt;span class=&quot;inline-flex items-center justify-center w-5 h-5 bg-slate-800 text-white text-xs rounded-full&quot;&gt;1&lt;/span&gt;
+      患者基本信息
+    &lt;/h2&gt;
+    &lt;div class=&quot;grid grid-cols-1 sm:grid-cols-2 gap-3&quot;&gt;
+      &lt;div&gt;
+        &lt;label class=&quot;block text-xs text-slate-500 mb-1&quot;&gt;姓名&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;name&quot; placeholder=&quot;请输入&quot; class=&quot;w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none&quot;&gt;
+      &lt;/div&gt;
+      &lt;div&gt;
+        &lt;label class=&quot;block text-xs text-slate-500 mb-1&quot;&gt;住院号 / 病历号&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;pid&quot; placeholder=&quot;选填&quot; class=&quot;w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none&quot;&gt;
+      &lt;/div&gt;
+      &lt;div&gt;
+        &lt;label class=&quot;block text-xs text-slate-500 mb-1&quot;&gt;性别&lt;/label&gt;
+        &lt;select id=&quot;gender&quot; class=&quot;w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none&quot;&gt;
+          &lt;option value=&quot;男&quot;&gt;男&lt;/option&gt;
+          &lt;option value=&quot;女&quot;&gt;女&lt;/option&gt;
+        &lt;/select&gt;
+      &lt;/div&gt;
+      &lt;div&gt;
+        &lt;label class=&quot;block text-xs text-slate-500 mb-1&quot;&gt;年龄（岁）&lt;/label&gt;
+        &lt;input type=&quot;number&quot; id=&quot;age&quot; placeholder=&quot;18-65&quot; min=&quot;0&quot; max=&quot;120&quot; class=&quot;w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none&quot;&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  <span class="comment">&lt;!-- ===== Section 2: 临床症状 ===== --&gt;</span>
+  &lt;div class=&quot;bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm&quot;&gt;
+    &lt;h2 class=&quot;text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2&quot;&gt;
+      &lt;span class=&quot;inline-flex items-center justify-center w-5 h-5 bg-slate-800 text-white text-xs rounded-full&quot;&gt;2&lt;/span&gt;
+      腰痛特征
+    &lt;/h2&gt;
+    &lt;div class=&quot;grid grid-cols-1 sm:grid-cols-2 gap-3&quot;&gt;
+      &lt;div&gt;
+        &lt;label class=&quot;block text-xs text-slate-500 mb-1&quot;&gt;疼痛持续时间&lt;/label&gt;
+        &lt;select id=&quot;duration&quot; class=&quot;w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none&quot;&gt;
+          &lt;option value=&quot;&quot;&gt;请选择&lt;/option&gt;
+          &lt;option value=&quot;4&quot;&gt;&amp;lt; 4 周（急性）&lt;/option&gt;
+          &lt;option value=&quot;8&quot;&gt;4-12 周（亚急性）&lt;/option&gt;
+          &lt;option value=&quot;12&quot;&gt;≥ 12 周（慢性）&lt;/option&gt;
+          &lt;option value=&quot;24&quot;&gt;≥ 24 周&lt;/option&gt;
+          &lt;option value=&quot;52&quot;&gt;≥ 1 年&lt;/option&gt;
+        &lt;/select&gt;
+      &lt;/div&gt;
+      &lt;div&gt;
+        &lt;label class=&quot;block text-xs text-slate-500 mb-1.5&quot;&gt;NRS 疼痛评分（0-10）&lt;/label&gt;
+        &lt;div class=&quot;flex items-center gap-3&quot;&gt;
+          &lt;input type=&quot;range&quot; id=&quot;nrs&quot; min=&quot;0&quot; max=&quot;10&quot; step=&quot;1&quot; value=&quot;0&quot;
+                 class=&quot;flex-1 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600&quot;
+                 oninput=&quot;document.getElementById(&apos;nrs_display&apos;).textContent = this.value&quot;&gt;
+          &lt;span id=&quot;nrs_display&quot; class=&quot;text-lg font-bold text-slate-700 min-w-[2ch] text-center&quot;&gt;0&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;flex justify-between text-[10px] text-slate-400 mt-0.5 px-0.5&quot;&gt;
+          &lt;span&gt;无痛&lt;/span&gt;
+          &lt;span&gt;中度&lt;/span&gt;
+          &lt;span&gt;剧痛&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;mt-3&quot;&gt;
+      &lt;label class=&quot;block text-xs text-slate-500 mb-1.5&quot;&gt;疼痛部位（可多选）&lt;/label&gt;
+      &lt;div class=&quot;flex flex-wrap gap-3&quot;&gt;
+        &lt;label class=&quot;flex items-center gap-1.5 text-sm cursor-pointer&quot;&gt;
+          &lt;input type=&quot;checkbox&quot; id=&quot;loc_ls&quot; value=&quot;1&quot; checked class=&quot;rounded border-slate-300 text-blue-600 focus:ring-blue-500&quot;&gt;
+          &lt;span&gt;腰骶部&lt;/span&gt;
+        &lt;/label&gt;
+        &lt;label class=&quot;flex items-center gap-1.5 text-sm cursor-pointer&quot;&gt;
+          &lt;input type=&quot;checkbox&quot; id=&quot;loc_buttock&quot; value=&quot;1&quot; class=&quot;rounded border-slate-300 text-blue-600 focus:ring-blue-500&quot;&gt;
+          &lt;span&gt;臀部&lt;/span&gt;
+        &lt;/label&gt;
+        &lt;label class=&quot;flex items-center gap-1.5 text-sm cursor-pointer&quot;&gt;
+          &lt;input type=&quot;checkbox&quot; id=&quot;loc_thigh&quot; value=&quot;1&quot; class=&quot;rounded border-slate-300 text-blue-600 focus:ring-blue-500&quot;&gt;
+          &lt;span&gt;大腿后侧（无放射痛）&lt;/span&gt;
+        &lt;/label&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  <span class="comment">&lt;!-- ===== Section 3: 排除因素筛选 ===== --&gt;</span>
+  &lt;div class=&quot;bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm&quot;&gt;
+    &lt;h2 class=&quot;text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2&quot;&gt;
+      &lt;span class=&quot;inline-flex items-center justify-center w-5 h-5 bg-red-600 text-white text-xs rounded-full&quot;&gt;⚠&lt;/span&gt;
+      排除因素筛查
+      &lt;span class=&quot;text-xs text-slate-400 font-normal ml-1&quot;&gt;（勾选任一即排除）&lt;/span&gt;
+    &lt;/h2&gt;
+    &lt;div class=&quot;grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2&quot;&gt;
+      &lt;label class=&quot;flex items-start gap-2 cursor-pointer group&quot;&gt;
+        &lt;input type=&quot;checkbox&quot; id=&quot;exc_surgery&quot; class=&quot;mt-0.5 rounded border-slate-300 text-red-500 focus:ring-red-400&quot;&gt;
+        &lt;span class=&quot;text-sm text-slate-700 group-hover:text-slate-900&quot;&gt;既往腰椎手术史（含微创）&lt;/span&gt;
+      &lt;/label&gt;
+      &lt;label class=&quot;flex items-start gap-2 cursor-pointer group&quot;&gt;
+        &lt;input type=&quot;checkbox&quot; id=&quot;exc_redflag&quot; class=&quot;mt-0.5 rounded border-slate-300 text-red-500 focus:ring-red-400&quot;&gt;
+        &lt;span class=&quot;text-sm text-slate-700 group-hover:text-slate-900&quot;&gt;影像学提示特异性病因（肿瘤/感染/骨折）&lt;/span&gt;
+      &lt;/label&gt;
+      &lt;label class=&quot;flex items-start gap-2 cursor-pointer group&quot;&gt;
+        &lt;input type=&quot;checkbox&quot; id=&quot;exc_cauda&quot; class=&quot;mt-0.5 rounded border-slate-300 text-red-500 focus:ring-red-400&quot;&gt;
+        &lt;span class=&quot;text-sm text-slate-700 group-hover:text-slate-900&quot;&gt;马尾综合征表现（鞍区麻木/大小便障碍）&lt;/span&gt;
+      &lt;/label&gt;
+      &lt;label class=&quot;flex items-start gap-2 cursor-pointer group&quot;&gt;
+        &lt;input type=&quot;checkbox&quot; id=&quot;exc_neuro&quot; class=&quot;mt-0.5 rounded border-slate-300 text-red-500 focus:ring-red-400&quot;&gt;
+        &lt;span class=&quot;text-sm text-slate-700 group-hover:text-slate-900&quot;&gt;进行性神经功能缺损 / 肌力下降&lt;/span&gt;
+      &lt;/label&gt;
+      &lt;label class=&quot;flex items-start gap-2 cursor-pointer group&quot;&gt;
+        &lt;input type=&quot;checkbox&quot; id=&quot;exc_rheuma&quot; class=&quot;mt-0.5 rounded border-slate-300 text-red-500 focus:ring-red-400&quot;&gt;
+        &lt;span class=&quot;text-sm text-slate-700 group-hover:text-slate-900&quot;&gt;炎症性风湿病（强直性脊柱炎等）&lt;/span&gt;
+      &lt;/label&gt;
+      &lt;label class=&quot;flex items-start gap-2 cursor-pointer group&quot;&gt;
+        &lt;input type=&quot;checkbox&quot; id=&quot;exc_deform&quot; class=&quot;mt-0.5 rounded border-slate-300 text-red-500 focus:ring-red-400&quot;&gt;
+        &lt;span class=&quot;text-sm text-slate-700 group-hover:text-slate-900&quot;&gt;严重脊柱畸形（侧弯＞20° / 后凸）&lt;/span&gt;
+      &lt;/label&gt;
+      &lt;label class=&quot;flex items-start gap-2 cursor-pointer group&quot;&gt;
+        &lt;input type=&quot;checkbox&quot; id=&quot;exc_preg&quot; class=&quot;mt-0.5 rounded border-slate-300 text-red-500 focus:ring-red-400&quot;&gt;
+        &lt;span class=&quot;text-sm text-slate-700 group-hover:text-slate-900&quot;&gt;妊娠或产后 3 个月内&lt;/span&gt;
+      &lt;/label&gt;
+      &lt;label class=&quot;flex items-start gap-2 cursor-pointer group&quot;&gt;
+        &lt;input type=&quot;checkbox&quot; id=&quot;exc_litig&quot; class=&quot;mt-0.5 rounded border-slate-300 text-red-500 focus:ring-red-400&quot;&gt;
+        &lt;span class=&quot;text-sm text-slate-700 group-hover:text-slate-900&quot;&gt;与腰痛相关的诉讼 / 工伤鉴定进行中&lt;/span&gt;
+      &lt;/label&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  <span class="comment">&lt;!-- ===== 判断按钮 ===== --&gt;</span>
+  &lt;button onclick=&quot;handleClick()&quot; id=&quot;submitBtn&quot; class=&quot;w-full bg-slate-800 text-white py-3.5 rounded-xl font-semibold text-base hover:bg-slate-700 active:bg-slate-900 transition-colors shadow-sm&quot;&gt;
+    判断入组
+  &lt;/button&gt;
+
+  <span class="comment">&lt;!-- ===== 结果区 ===== --&gt;</span>
+  &lt;div id=&quot;result&quot; class=&quot;space-y-3&quot;&gt;&lt;/div&gt;
+
+  <span class="comment">&lt;!-- ===== 文献参考 ===== --&gt;</span>
+  &lt;details class=&quot;text-xs text-slate-400&quot;&gt;
+    &lt;summary class=&quot;cursor-pointer hover:text-slate-600&quot;&gt;纳排标准参考文献&lt;/summary&gt;
+    &lt;div class=&quot;mt-2 space-y-1 leading-relaxed&quot;&gt;
+      &lt;p&gt;[1] Maher C, Underwood M, Buchbinder R. Non-specific low back pain. &lt;em&gt;Lancet&lt;/em&gt;. 2017;389(10070):736-747.&lt;/p&gt;
+      &lt;p&gt;[2] Qaseem A, et al. Noninvasive Treatments for Acute, Subacute, and Chronic Low Back Pain. &lt;em&gt;Ann Intern Med&lt;/em&gt;. 2017;166(7):514-530.&lt;/p&gt;
+      &lt;p&gt;[3] Hayden JA, et al. Exercise therapy for chronic low back pain. &lt;em&gt;Cochrane Database Syst Rev&lt;/em&gt;. 2022;(1):CD009790.&lt;/p&gt;
+      &lt;p&gt;[4] Oliveira CB, et al. Clinical practice guidelines for the management of non-specific low back pain in primary care. &lt;em&gt;Eur Spine J&lt;/em&gt;. 2018;27(11):2791-2803.&lt;/p&gt;
+      &lt;p&gt;[5] Delitto A, et al. Low back pain. &lt;em&gt;J Orthop Sports Phys Ther&lt;/em&gt;. 2012;42(4):A1-57.&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/details&gt;
+
+&lt;/div&gt;
+
+&lt;script&gt;
+<span class="comment"><span class="comment">// ====================================================================</span></span>
+<span class="comment">// 入组纳排标准 · 慢性非特异性腰痛 (Chronic Non-Specific LBP)</span>
+<span class="comment">// 可在此区域修改 criteria 中的检查逻辑，替换为自己课题的标准</span>
+// ====================================================================
+
+const criteria = {
+  inclusion: [
+    {
+      id: &quot;inc_age&quot;,
+      label: &quot;年龄 18-65 岁&quot;,
+      check: (d) =&gt; d.age &gt;= 18 &amp;&amp; d.age &lt;= 65,
+      ref: &quot;[1][2]&quot;
+    },
+    {
+      id: &quot;inc_duration&quot;,
+      label: &quot;腰痛持续 ≥ 12 周（慢性）&quot;,
+      check: (d) =&gt; parseInt(d.duration) &gt;= 12,
+      ref: &quot;[1][3]&quot;
+    },
+    {
+      id: &quot;inc_nrs&quot;,
+      label: &quot;NRS 疼痛评分 ≥ 3 分&quot;,
+      check: (d) =&gt; d.nrs &gt;= 3,
+      ref: &quot;[4]&quot;
+    },
+    {
+      id: &quot;inc_location&quot;,
+      label: &quot;疼痛位于腰骶部（可伴臀部/大腿牵涉痛）&quot;,
+      check: (d) =&gt; d.painLocation.ls || d.painLocation.buttock,
+      ref: &quot;[1][5]&quot;
+    },
+    {
+      id: &quot;inc_diag&quot;,
+      label: &quot;临床诊断符合非特异性腰痛（排除已知特异病因）&quot;,
+      check: (d) =&gt; true,   <span class="comment">// 由排除因素间接验证</span>
+      ref: &quot;[1][2]&quot;
+    }
+  ],
+
+  exclusion: [
+    {
+      id: &quot;exc_surgery&quot;,
+      label: &quot;既往腰椎手术史&quot;,
+      check: (d) =&gt; !d.excFactors.surgery
+    },
+    {
+      id: &quot;exc_redflag&quot;,
+      label: &quot;无特异性病因（肿瘤/感染/骨折）&quot;,
+      check: (d) =&gt; !d.excFactors.redFlag
+    },
+    {
+      id: &quot;exc_cauda&quot;,
+      label: &quot;无马尾综合征表现&quot;,
+      check: (d) =&gt; !d.excFactors.caudaEquina
+    },
+    {
+      id: &quot;exc_neuro&quot;,
+      label: &quot;无进行性神经功能缺损&quot;,
+      check: (d) =&gt; !d.excFactors.neuroDeficit
+    },
+    {
+      id: &quot;exc_rheuma&quot;,
+      label: &quot;无炎症性风湿病&quot;,
+      check: (d) =&gt; !d.excFactors.rheuma
+    },
+    {
+      id: &quot;exc_deform&quot;,
+      label: &quot;无严重脊柱畸形&quot;,
+      check: (d) =&gt; !d.excFactors.deformity
+    },
+    {
+      id: &quot;exc_preg&quot;,
+      label: &quot;非妊娠期&quot;,
+      check: (d) =&gt; !d.excFactors.pregnancy
+    },
+    {
+      id: &quot;exc_litig&quot;,
+      label: &quot;无诉讼/工伤鉴定进行中&quot;,
+      check: (d) =&gt; !d.excFactors.litigation
+    }
+  ]
+};
+
+function evaluate(data) {
+  let results = [];
+  criteria.inclusion.forEach(c =&gt; {
+    results.push({ ...c, pass: c.check(data), type: &quot;inclusion&quot; });
+  });
+  criteria.exclusion.forEach(c =&gt; {
+    results.push({ ...c, pass: c.check(data), type: &quot;exclusion&quot; });
+  });
+  return results;
+}
+
+function handleClick() {
+  const name = document.getElementById(&quot;name&quot;).value.trim();
+  const age = parseInt(document.getElementById(&quot;age&quot;).value);
+  const gender = document.getElementById(&quot;gender&quot;).value;
+  const duration = document.getElementById(&quot;duration&quot;).value;
+  const nrs = parseInt(document.getElementById(&quot;nrs&quot;).value);
+
+  const data = {
+    name,
+    age,
+    gender,
+    duration,
+    nrs,
+    painLocation: {
+      ls: document.getElementById(&quot;loc_ls&quot;).checked,
+      buttock: document.getElementById(&quot;loc_buttock&quot;).checked,
+      thigh: document.getElementById(&quot;loc_thigh&quot;).checked
+    },
+    excFactors: {
+      surgery:     document.getElementById(&quot;exc_surgery&quot;).checked,
+      redFlag:     document.getElementById(&quot;exc_redflag&quot;).checked,
+      caudaEquina: document.getElementById(&quot;exc_cauda&quot;).checked,
+      neuroDeficit: document.getElementById(&quot;exc_neuro&quot;).checked,
+      rheuma:      document.getElementById(&quot;exc_rheuma&quot;).checked,
+      deformity:   document.getElementById(&quot;exc_deform&quot;).checked,
+      pregnancy:   document.getElementById(&quot;exc_preg&quot;).checked,
+      litigation:  document.getElementById(&quot;exc_litig&quot;).checked
+    }
+  };
+
+  const container = document.getElementById(&quot;result&quot;);
+  container.innerHTML = &quot;&quot;;
+
+  <span class="comment">// --- 表单验证 ---</span>
+  if (!name) {
+    container.innerHTML = `&lt;div class=&quot;bg-red-50 border border-red-200 text-red-700 rounded-xl p-4 text-sm&quot;&gt;⚠ 请填写患者姓名&lt;/div&gt;`;
+    return;
+  }
+  if (!age || age &lt; 0 || age &gt; 120) {
+    container.innerHTML = `&lt;div class=&quot;bg-red-50 border border-red-200 text-red-700 rounded-xl p-4 text-sm&quot;&gt;⚠ 请输入有效年龄&lt;/div&gt;`;
+    return;
+  }
+  if (!duration) {
+    container.innerHTML = `&lt;div class=&quot;bg-red-50 border border-red-200 text-red-700 rounded-xl p-4 text-sm&quot;&gt;⚠ 请选择疼痛持续时间&lt;/div&gt;`;
+    return;
+  }
+  if (isNaN(nrs) || nrs &lt; 0 || nrs &gt; 10) {
+    container.innerHTML = `&lt;div class=&quot;bg-red-50 border border-red-200 text-red-700 rounded-xl p-4 text-sm&quot;&gt;⚠ 请填写 NRS 疼痛评分（0-10）&lt;/div&gt;`;
+    return;
+  }
+
+  const results = evaluate(data);
+  let allPass = true;
+
+  <span class="comment">// --- 纳入标准区域 ---</span>
+  let incHTML = `&lt;div class=&quot;bg-white rounded-xl border border-slate-200 p-4 shadow-sm&quot;&gt;
+    &lt;h3 class=&quot;text-xs font-semibold text-incl-700 mb-2 uppercase tracking-wider&quot;&gt;▶ 纳入标准&lt;/h3&gt;`;
+
+  results.filter(r =&gt; r.type === &quot;inclusion&quot;).forEach(r =&gt; {
+    allPass = allPass &amp;&amp; r.pass;
+    incHTML += `
+      &lt;div class=&quot;flex items-start gap-2.5 py-1.5 criterion-item&quot;&gt;
+        &lt;span class=&quot;mt-0.5 text-base flex-shrink-0&quot;&gt;${r.pass ? &#x27;✅&#x27; : &#x27;❌&#x27;}&lt;/span&gt;
+        &lt;div class=&quot;flex-1 min-w-0&quot;&gt;
+          &lt;div class=&quot;flex items-baseline gap-2&quot;&gt;
+            &lt;span class=&quot;text-sm ${r.pass ? &#x27;text-incl-700&#x27; : &#x27;text-red-700&#x27;}&quot;&gt;${r.label}&lt;/span&gt;
+            &lt;span class=&quot;ref-tag&quot;&gt;${r.ref || &#x27;&#x27;}&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;mt-1 h-1.5 bg-slate-100 rounded-full overflow-hidden&quot;&gt;
+            &lt;div class=&quot;h-full rounded-full transition-all duration-300 ${r.pass ? &#x27;bg-incl-600&#x27; : &#x27;bg-red-400&#x27;}&quot; style=&quot;width: ${r.pass ? &#x27;100%&#x27; : &#x27;20%&#x27;}&quot;&gt;&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;`;
+  });
+  incHTML += `&lt;/div&gt;`;
+
+  <span class="comment">// --- 排除标准区域 ---</span>
+  let excHTML = `&lt;div class=&quot;bg-white rounded-xl border border-slate-200 p-4 shadow-sm&quot;&gt;
+    &lt;h3 class=&quot;text-xs font-semibold text-excl-700 mb-2 uppercase tracking-wider&quot;&gt;▶ 排除标准&lt;/h3&gt;`;
+
+  results.filter(r =&gt; r.type === &quot;exclusion&quot;).forEach(r =&gt; {
+    const passed = r.pass;  // true = 排除因素不存在（通过）
+    allPass = allPass &amp;&amp; passed;
+    excHTML += `
+      &lt;div class=&quot;flex items-start gap-2.5 py-1.5 criterion-item&quot;&gt;
+        &lt;span class=&quot;mt-0.5 text-base flex-shrink-0&quot;&gt;${passed ? &#x27;✅&#x27; : &#x27;❌&#x27;}&lt;/span&gt;
+        &lt;div class=&quot;flex-1 min-w-0&quot;&gt;
+          &lt;span class=&quot;text-sm ${passed ? &#x27;text-incl-700&#x27; : &#x27;text-red-700&#x27;}&quot;&gt;${r.label}&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;`;
+  });
+  excHTML += `&lt;/div&gt;`;
+
+  <span class="comment">// --- 汇总 ---</span>
+  const summaryHTML = `
+    &lt;div class=&quot;rounded-xl p-4 shadow-sm text-center ${allPass ? &#x27;bg-incl-50 border border-incl-200&#x27; : &#x27;bg-excl-50 border border-excl-200&#x27;}&quot;&gt;
+      &lt;div class=&quot;text-lg font-bold ${allPass ? &#x27;text-incl-800&#x27; : &#x27;text-excl-800&#x27;}&quot;&gt;
+        ${allPass ? &#x27;✅ 符合入组条件&#x27; : &#x27;❌ 不符合入组条件&#x27;}
+      &lt;/div&gt;
+      &lt;div class=&quot;text-xs ${allPass ? &#x27;text-incl-600&#x27; : &#x27;text-excl-600&#x27;} mt-1&quot;&gt;
+        ${allPass
+          ? &#x27;该患者满足所有纳入标准，且无排除因素&#x27;
+          : &#x27;请在以上标注 ❌ 的条目中排查未达标项&#x27;}
+      &lt;/div&gt;
+    &lt;/div&gt;`;
+
+  container.innerHTML = summaryHTML + incHTML + excHTML;
+
+  <span class="comment">// 滚动到结果区</span>
+  container.scrollIntoView({ behavior: &#x27;smooth&#x27;, block: &#x27;start&#x27; });
+}
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+  <div style="text-align: center; margin: 20px 0;">
+    <iframe srcdoc="<!DOCTYPE html>
+<html lang=&quot;zh-CN&quot;>
+<head>
+  <meta charset=&quot;UTF-8&quot;>
+  <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+  <title>慢性非特异性腰痛 · 入组纳排工具</title>
+  <script src=&quot;https://cdn.tailwindcss.com&quot;></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af' },
+            incl:  { 50: '#f0fdf4', 100: '#dcfce7', 600: '#16a34a', 700: '#15803d', 800: '#166534' },
+            excl:  { 50: '#fef2f2', 100: '#fee2e2', 600: '#dc2626', 700: '#b91c1c', 800: '#991b1b' },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;Noto Sans SC&quot;, &quot;PingFang SC&quot;, sans-serif; }
+    .criterion-item { transition: all 0.2s; }
+    .ref-tag { font-size: 11px; color: #94a3b8; font-style: italic; }
+  </style>
+</head>
+<body class=&quot;bg-slate-50 min-h-screen p-3 sm:p-4&quot;>
+
+<div class=&quot;max-w-2xl mx-auto space-y-4&quot;>
+
+  <!-- ===== Header ===== -->
+  <div class=&quot;bg-gradient-to-r from-slate-800 to-slate-700 text-white rounded-xl p-5 sm:p-6 shadow-md&quot;>
+    <h1 class=&quot;text-lg sm:text-xl font-bold&quot;>慢性非特异性腰痛 · 入组纳排评估</h1>
+    <p class=&quot;text-slate-300 text-sm mt-1&quot;>Chronic Non-Specific Low Back Pain — Eligibility Screening Tool</p>
+    <p class=&quot;text-xs text-slate-400 mt-2&quot;>参考依据：Cochrane Review (2022) · NEJM (2017) · Ann Intern Med (2017) 等</p>
+  </div>
+
+  <!-- ===== Section 1: 患者基本信息 ===== -->
+  <div class=&quot;bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm&quot;>
+    <h2 class=&quot;text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2&quot;>
+      <span class=&quot;inline-flex items-center justify-center w-5 h-5 bg-slate-800 text-white text-xs rounded-full&quot;>1</span>
+      患者基本信息
+    </h2>
+    <div class=&quot;grid grid-cols-1 sm:grid-cols-2 gap-3&quot;>
+      <div>
+        <label class=&quot;block text-xs text-slate-500 mb-1&quot;>姓名</label>
+        <input type=&quot;text&quot; id=&quot;name&quot; placeholder=&quot;请输入&quot; class=&quot;w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none&quot;>
+      </div>
+      <div>
+        <label class=&quot;block text-xs text-slate-500 mb-1&quot;>住院号 / 病历号</label>
+        <input type=&quot;text&quot; id=&quot;pid&quot; placeholder=&quot;选填&quot; class=&quot;w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none&quot;>
+      </div>
+      <div>
+        <label class=&quot;block text-xs text-slate-500 mb-1&quot;>性别</label>
+        <select id=&quot;gender&quot; class=&quot;w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none&quot;>
+          <option value=&quot;男&quot;>男</option>
+          <option value=&quot;女&quot;>女</option>
+        </select>
+      </div>
+      <div>
+        <label class=&quot;block text-xs text-slate-500 mb-1&quot;>年龄（岁）</label>
+        <input type=&quot;number&quot; id=&quot;age&quot; placeholder=&quot;18-65&quot; min=&quot;0&quot; max=&quot;120&quot; class=&quot;w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none&quot;>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Section 2: 临床症状 ===== -->
+  <div class=&quot;bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm&quot;>
+    <h2 class=&quot;text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2&quot;>
+      <span class=&quot;inline-flex items-center justify-center w-5 h-5 bg-slate-800 text-white text-xs rounded-full&quot;>2</span>
+      腰痛特征
+    </h2>
+    <div class=&quot;grid grid-cols-1 sm:grid-cols-2 gap-3&quot;>
+      <div>
+        <label class=&quot;block text-xs text-slate-500 mb-1&quot;>疼痛持续时间</label>
+        <select id=&quot;duration&quot; class=&quot;w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none&quot;>
+          <option value=&quot;&quot;>请选择</option>
+          <option value=&quot;4&quot;>&lt; 4 周（急性）</option>
+          <option value=&quot;8&quot;>4-12 周（亚急性）</option>
+          <option value=&quot;12&quot;>≥ 12 周（慢性）</option>
+          <option value=&quot;24&quot;>≥ 24 周</option>
+          <option value=&quot;52&quot;>≥ 1 年</option>
+        </select>
+      </div>
+      <div>
+        <label class=&quot;block text-xs text-slate-500 mb-1.5&quot;>NRS 疼痛评分（0-10）</label>
+        <div class=&quot;flex items-center gap-3&quot;>
+          <input type=&quot;range&quot; id=&quot;nrs&quot; min=&quot;0&quot; max=&quot;10&quot; step=&quot;1&quot; value=&quot;0&quot;
+                 class=&quot;flex-1 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600&quot;
+                 oninput=&quot;document.getElementById('nrs_display').textContent = this.value&quot;>
+          <span id=&quot;nrs_display&quot; class=&quot;text-lg font-bold text-slate-700 min-w-[2ch] text-center&quot;>0</span>
+        </div>
+        <div class=&quot;flex justify-between text-[10px] text-slate-400 mt-0.5 px-0.5&quot;>
+          <span>无痛</span>
+          <span>中度</span>
+          <span>剧痛</span>
+        </div>
+      </div>
+    </div>
+    <div class=&quot;mt-3&quot;>
+      <label class=&quot;block text-xs text-slate-500 mb-1.5&quot;>疼痛部位（可多选）</label>
+      <div class=&quot;flex flex-wrap gap-3&quot;>
+        <label class=&quot;flex items-center gap-1.5 text-sm cursor-pointer&quot;>
+          <input type=&quot;checkbox&quot; id=&quot;loc_ls&quot; value=&quot;1&quot; checked class=&quot;rounded border-slate-300 text-blue-600 focus:ring-blue-500&quot;>
+          <span>腰骶部</span>
+        </label>
+        <label class=&quot;flex items-center gap-1.5 text-sm cursor-pointer&quot;>
+          <input type=&quot;checkbox&quot; id=&quot;loc_buttock&quot; value=&quot;1&quot; class=&quot;rounded border-slate-300 text-blue-600 focus:ring-blue-500&quot;>
+          <span>臀部</span>
+        </label>
+        <label class=&quot;flex items-center gap-1.5 text-sm cursor-pointer&quot;>
+          <input type=&quot;checkbox&quot; id=&quot;loc_thigh&quot; value=&quot;1&quot; class=&quot;rounded border-slate-300 text-blue-600 focus:ring-blue-500&quot;>
+          <span>大腿后侧（无放射痛）</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Section 3: 排除因素筛选 ===== -->
+  <div class=&quot;bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm&quot;>
+    <h2 class=&quot;text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2&quot;>
+      <span class=&quot;inline-flex items-center justify-center w-5 h-5 bg-red-600 text-white text-xs rounded-full&quot;>⚠</span>
+      排除因素筛查
+      <span class=&quot;text-xs text-slate-400 font-normal ml-1&quot;>（勾选任一即排除）</span>
+    </h2>
+    <div class=&quot;grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2&quot;>
+      <label class=&quot;flex items-start gap-2 cursor-pointer group&quot;>
+        <input type=&quot;checkbox&quot; id=&quot;exc_surgery&quot; class=&quot;mt-0.5 rounded border-slate-300 text-red-500 focus:ring-red-400&quot;>
+        <span class=&quot;text-sm text-slate-700 group-hover:text-slate-900&quot;>既往腰椎手术史（含微创）</span>
+      </label>
+      <label class=&quot;flex items-start gap-2 cursor-pointer group&quot;>
+        <input type=&quot;checkbox&quot; id=&quot;exc_redflag&quot; class=&quot;mt-0.5 rounded border-slate-300 text-red-500 focus:ring-red-400&quot;>
+        <span class=&quot;text-sm text-slate-700 group-hover:text-slate-900&quot;>影像学提示特异性病因（肿瘤/感染/骨折）</span>
+      </label>
+      <label class=&quot;flex items-start gap-2 cursor-pointer group&quot;>
+        <input type=&quot;checkbox&quot; id=&quot;exc_cauda&quot; class=&quot;mt-0.5 rounded border-slate-300 text-red-500 focus:ring-red-400&quot;>
+        <span class=&quot;text-sm text-slate-700 group-hover:text-slate-900&quot;>马尾综合征表现（鞍区麻木/大小便障碍）</span>
+      </label>
+      <label class=&quot;flex items-start gap-2 cursor-pointer group&quot;>
+        <input type=&quot;checkbox&quot; id=&quot;exc_neuro&quot; class=&quot;mt-0.5 rounded border-slate-300 text-red-500 focus:ring-red-400&quot;>
+        <span class=&quot;text-sm text-slate-700 group-hover:text-slate-900&quot;>进行性神经功能缺损 / 肌力下降</span>
+      </label>
+      <label class=&quot;flex items-start gap-2 cursor-pointer group&quot;>
+        <input type=&quot;checkbox&quot; id=&quot;exc_rheuma&quot; class=&quot;mt-0.5 rounded border-slate-300 text-red-500 focus:ring-red-400&quot;>
+        <span class=&quot;text-sm text-slate-700 group-hover:text-slate-900&quot;>炎症性风湿病（强直性脊柱炎等）</span>
+      </label>
+      <label class=&quot;flex items-start gap-2 cursor-pointer group&quot;>
+        <input type=&quot;checkbox&quot; id=&quot;exc_deform&quot; class=&quot;mt-0.5 rounded border-slate-300 text-red-500 focus:ring-red-400&quot;>
+        <span class=&quot;text-sm text-slate-700 group-hover:text-slate-900&quot;>严重脊柱畸形（侧弯＞20° / 后凸）</span>
+      </label>
+      <label class=&quot;flex items-start gap-2 cursor-pointer group&quot;>
+        <input type=&quot;checkbox&quot; id=&quot;exc_preg&quot; class=&quot;mt-0.5 rounded border-slate-300 text-red-500 focus:ring-red-400&quot;>
+        <span class=&quot;text-sm text-slate-700 group-hover:text-slate-900&quot;>妊娠或产后 3 个月内</span>
+      </label>
+      <label class=&quot;flex items-start gap-2 cursor-pointer group&quot;>
+        <input type=&quot;checkbox&quot; id=&quot;exc_litig&quot; class=&quot;mt-0.5 rounded border-slate-300 text-red-500 focus:ring-red-400&quot;>
+        <span class=&quot;text-sm text-slate-700 group-hover:text-slate-900&quot;>与腰痛相关的诉讼 / 工伤鉴定进行中</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- ===== 判断按钮 ===== -->
+  <button onclick=&quot;handleClick()&quot; id=&quot;submitBtn&quot; class=&quot;w-full bg-slate-800 text-white py-3.5 rounded-xl font-semibold text-base hover:bg-slate-700 active:bg-slate-900 transition-colors shadow-sm&quot;>
+    判断入组
+  </button>
+
+  <!-- ===== 结果区 ===== -->
+  <div id=&quot;result&quot; class=&quot;space-y-3&quot;></div>
+
+  <!-- ===== 文献参考 ===== -->
+  <details class=&quot;text-xs text-slate-400&quot;>
+    <summary class=&quot;cursor-pointer hover:text-slate-600&quot;>纳排标准参考文献</summary>
+    <div class=&quot;mt-2 space-y-1 leading-relaxed&quot;>
+      <p>[1] Maher C, Underwood M, Buchbinder R. Non-specific low back pain. <em>Lancet</em>. 2017;389(10070):736-747.</p>
+      <p>[2] Qaseem A, et al. Noninvasive Treatments for Acute, Subacute, and Chronic Low Back Pain. <em>Ann Intern Med</em>. 2017;166(7):514-530.</p>
+      <p>[3] Hayden JA, et al. Exercise therapy for chronic low back pain. <em>Cochrane Database Syst Rev</em>. 2022;(1):CD009790.</p>
+      <p>[4] Oliveira CB, et al. Clinical practice guidelines for the management of non-specific low back pain in primary care. <em>Eur Spine J</em>. 2018;27(11):2791-2803.</p>
+      <p>[5] Delitto A, et al. Low back pain. <em>J Orthop Sports Phys Ther</em>. 2012;42(4):A1-57.</p>
+    </div>
+  </details>
+
+</div>
+
+<script>
+// ====================================================================
+// 入组纳排标准 · 慢性非特异性腰痛 (Chronic Non-Specific LBP)
+// 可在此区域修改 criteria 中的检查逻辑，替换为自己课题的标准
+// ====================================================================
+
+const criteria = {
+  inclusion: [
+    {
+      id: &quot;inc_age&quot;,
+      label: &quot;年龄 18-65 岁&quot;,
+      check: (d) => d.age >= 18 && d.age <= 65,
+      ref: &quot;[1][2]&quot;
+    },
+    {
+      id: &quot;inc_duration&quot;,
+      label: &quot;腰痛持续 ≥ 12 周（慢性）&quot;,
+      check: (d) => parseInt(d.duration) >= 12,
+      ref: &quot;[1][3]&quot;
+    },
+    {
+      id: &quot;inc_nrs&quot;,
+      label: &quot;NRS 疼痛评分 ≥ 3 分&quot;,
+      check: (d) => d.nrs >= 3,
+      ref: &quot;[4]&quot;
+    },
+    {
+      id: &quot;inc_location&quot;,
+      label: &quot;疼痛位于腰骶部（可伴臀部/大腿牵涉痛）&quot;,
+      check: (d) => d.painLocation.ls || d.painLocation.buttock,
+      ref: &quot;[1][5]&quot;
+    },
+    {
+      id: &quot;inc_diag&quot;,
+      label: &quot;临床诊断符合非特异性腰痛（排除已知特异病因）&quot;,
+      check: (d) => true,   // 由排除因素间接验证
+      ref: &quot;[1][2]&quot;
+    }
+  ],
+
+  exclusion: [
+    {
+      id: &quot;exc_surgery&quot;,
+      label: &quot;既往腰椎手术史&quot;,
+      check: (d) => !d.excFactors.surgery
+    },
+    {
+      id: &quot;exc_redflag&quot;,
+      label: &quot;无特异性病因（肿瘤/感染/骨折）&quot;,
+      check: (d) => !d.excFactors.redFlag
+    },
+    {
+      id: &quot;exc_cauda&quot;,
+      label: &quot;无马尾综合征表现&quot;,
+      check: (d) => !d.excFactors.caudaEquina
+    },
+    {
+      id: &quot;exc_neuro&quot;,
+      label: &quot;无进行性神经功能缺损&quot;,
+      check: (d) => !d.excFactors.neuroDeficit
+    },
+    {
+      id: &quot;exc_rheuma&quot;,
+      label: &quot;无炎症性风湿病&quot;,
+      check: (d) => !d.excFactors.rheuma
+    },
+    {
+      id: &quot;exc_deform&quot;,
+      label: &quot;无严重脊柱畸形&quot;,
+      check: (d) => !d.excFactors.deformity
+    },
+    {
+      id: &quot;exc_preg&quot;,
+      label: &quot;非妊娠期&quot;,
+      check: (d) => !d.excFactors.pregnancy
+    },
+    {
+      id: &quot;exc_litig&quot;,
+      label: &quot;无诉讼/工伤鉴定进行中&quot;,
+      check: (d) => !d.excFactors.litigation
+    }
+  ]
+};
+
+function evaluate(data) {
+  let results = [];
+  criteria.inclusion.forEach(c => {
+    results.push({ ...c, pass: c.check(data), type: &quot;inclusion&quot; });
+  });
+  criteria.exclusion.forEach(c => {
+    results.push({ ...c, pass: c.check(data), type: &quot;exclusion&quot; });
+  });
+  return results;
+}
+
+function handleClick() {
+  const name = document.getElementById(&quot;name&quot;).value.trim();
+  const age = parseInt(document.getElementById(&quot;age&quot;).value);
+  const gender = document.getElementById(&quot;gender&quot;).value;
+  const duration = document.getElementById(&quot;duration&quot;).value;
+  const nrs = parseInt(document.getElementById(&quot;nrs&quot;).value);
+
+  const data = {
+    name,
+    age,
+    gender,
+    duration,
+    nrs,
+    painLocation: {
+      ls: document.getElementById(&quot;loc_ls&quot;).checked,
+      buttock: document.getElementById(&quot;loc_buttock&quot;).checked,
+      thigh: document.getElementById(&quot;loc_thigh&quot;).checked
+    },
+    excFactors: {
+      surgery:     document.getElementById(&quot;exc_surgery&quot;).checked,
+      redFlag:     document.getElementById(&quot;exc_redflag&quot;).checked,
+      caudaEquina: document.getElementById(&quot;exc_cauda&quot;).checked,
+      neuroDeficit: document.getElementById(&quot;exc_neuro&quot;).checked,
+      rheuma:      document.getElementById(&quot;exc_rheuma&quot;).checked,
+      deformity:   document.getElementById(&quot;exc_deform&quot;).checked,
+      pregnancy:   document.getElementById(&quot;exc_preg&quot;).checked,
+      litigation:  document.getElementById(&quot;exc_litig&quot;).checked
+    }
+  };
+
+  const container = document.getElementById(&quot;result&quot;);
+  container.innerHTML = &quot;&quot;;
+
+  // --- 表单验证 ---
+  if (!name) {
+    container.innerHTML = `<div class=&quot;bg-red-50 border border-red-200 text-red-700 rounded-xl p-4 text-sm&quot;>⚠ 请填写患者姓名</div>`;
+    return;
+  }
+  if (!age || age < 0 || age > 120) {
+    container.innerHTML = `<div class=&quot;bg-red-50 border border-red-200 text-red-700 rounded-xl p-4 text-sm&quot;>⚠ 请输入有效年龄</div>`;
+    return;
+  }
+  if (!duration) {
+    container.innerHTML = `<div class=&quot;bg-red-50 border border-red-200 text-red-700 rounded-xl p-4 text-sm&quot;>⚠ 请选择疼痛持续时间</div>`;
+    return;
+  }
+  if (isNaN(nrs) || nrs < 0 || nrs > 10) {
+    container.innerHTML = `<div class=&quot;bg-red-50 border border-red-200 text-red-700 rounded-xl p-4 text-sm&quot;>⚠ 请填写 NRS 疼痛评分（0-10）</div>`;
+    return;
+  }
+
+  const results = evaluate(data);
+  let allPass = true;
+
+  // --- 纳入标准区域 ---
+  let incHTML = `<div class=&quot;bg-white rounded-xl border border-slate-200 p-4 shadow-sm&quot;>
+    <h3 class=&quot;text-xs font-semibold text-incl-700 mb-2 uppercase tracking-wider&quot;>▶ 纳入标准</h3>`;
+
+  results.filter(r => r.type === &quot;inclusion&quot;).forEach(r => {
+    allPass = allPass && r.pass;
+    incHTML += `
+      <div class=&quot;flex items-start gap-2.5 py-1.5 criterion-item&quot;>
+        <span class=&quot;mt-0.5 text-base flex-shrink-0&quot;>${r.pass ? '✅' : '❌'}</span>
+        <div class=&quot;flex-1 min-w-0&quot;>
+          <div class=&quot;flex items-baseline gap-2&quot;>
+            <span class=&quot;text-sm ${r.pass ? 'text-incl-700' : 'text-red-700'}&quot;>${r.label}</span>
+            <span class=&quot;ref-tag&quot;>${r.ref || ''}</span>
+          </div>
+          <div class=&quot;mt-1 h-1.5 bg-slate-100 rounded-full overflow-hidden&quot;>
+            <div class=&quot;h-full rounded-full transition-all duration-300 ${r.pass ? 'bg-incl-600' : 'bg-red-400'}&quot; style=&quot;width: ${r.pass ? '100%' : '20%'}&quot;></div>
+          </div>
+        </div>
+      </div>`;
+  });
+  incHTML += `</div>`;
+
+  // --- 排除标准区域 ---
+  let excHTML = `<div class=&quot;bg-white rounded-xl border border-slate-200 p-4 shadow-sm&quot;>
+    <h3 class=&quot;text-xs font-semibold text-excl-700 mb-2 uppercase tracking-wider&quot;>▶ 排除标准</h3>`;
+
+  results.filter(r => r.type === &quot;exclusion&quot;).forEach(r => {
+    const passed = r.pass;  // true = 排除因素不存在（通过）
+    allPass = allPass && passed;
+    excHTML += `
+      <div class=&quot;flex items-start gap-2.5 py-1.5 criterion-item&quot;>
+        <span class=&quot;mt-0.5 text-base flex-shrink-0&quot;>${passed ? '✅' : '❌'}</span>
+        <div class=&quot;flex-1 min-w-0&quot;>
+          <span class=&quot;text-sm ${passed ? 'text-incl-700' : 'text-red-700'}&quot;>${r.label}</span>
+        </div>
+      </div>`;
+  });
+  excHTML += `</div>`;
+
+  // --- 汇总 ---
+  const summaryHTML = `
+    <div class=&quot;rounded-xl p-4 shadow-sm text-center ${allPass ? 'bg-incl-50 border border-incl-200' : 'bg-excl-50 border border-excl-200'}&quot;>
+      <div class=&quot;text-lg font-bold ${allPass ? 'text-incl-800' : 'text-excl-800'}&quot;>
+        ${allPass ? '✅ 符合入组条件' : '❌ 不符合入组条件'}
+      </div>
+      <div class=&quot;text-xs ${allPass ? 'text-incl-600' : 'text-excl-600'} mt-1&quot;>
+        ${allPass
+          ? '该患者满足所有纳入标准，且无排除因素'
+          : '请在以上标注 ❌ 的条目中排查未达标项'}
+      </div>
+    </div>`;
+
+  container.innerHTML = summaryHTML + incHTML + excHTML;
+
+  // 滚动到结果区
+  container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+
+</body>
+</html>
+" style="width: 100%; max-width: 600px; height: 640px; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);"></iframe>
+    
+  </div>
+
+
+  <div class="callout callout-warn">
+    <strong>注意：</strong>模板仅作参考。你完全可以不按这个模板来——选择你感兴趣的方法（IDE对话 / AI Agent / 多模态），从零开始生成自己的代码。
+  </div>
+
+  <h3 id="task-deliver">6.4 预期结果</h3>
+  <table class="deliver-table">
+    <thead>
+      <tr><th>项目</th><th>要求</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>成品文件</td><td>一个 <code>index.html</code>，浏览器直接打开可用</td></tr>
+      <tr><td>技术栈</td><td>HTML + Tailwind CSS CDN + Vanilla JS</td></tr>
+      <tr><td>纳排标准</td><td>至少 3 条纳入 + 2 条排除，基于自己课题内容</td></tr>
+      <tr><td>界面</td><td>移动端适配，一页内完成输入→判断→结果</td></tr>
+      <tr><td>编程方法</td><td>任选：IDE对话式 / AI Agent命令行 / 多模态</td></tr>
+      <tr><td>可选：汇报内容</td><td>下次组会可以分享一下：选用了哪种方法、遇到什么问题、如何解决的、最终效果</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="task-resource">6.6 学习资源</h3>
+  <table class="tool-table">
+    <tr><th style="width:22%">资源</th><th>用途与说明</th></tr>
+    <tr>
+      <td><strong>GitHub 新手教程</strong><br><code>docs.github.com/en/get-started</code></td>
+      <td>GitHub 官方入门指南，从注册到上传第一个项目的完整流程，全图文步骤，零命令行。</td>
+    </tr>
+    <tr>
+      <td><strong>Datawhale Easy-Vibe</strong><br><code>datawhalechina.github.io/easy-vibe</code></td>
+      <td>Datawhale 社区出品的 Vibe Coding 课程，覆盖 Cursor、AI Agent、多模态等工具的实操教程，中文化文档，手把手讲解。</td>
+    </tr>
+    <tr>
+      <td><strong>Cursor 官网 + 文档</strong><br><code>cursor.com</code></td>
+      <td>Cursor IDE 官方站点。下载安装后可参考官方文档（cursor.com/docs）了解快捷键、Composer 模式、Agent 模式等进阶功能。</td>
+    </tr>
+    <tr>
+      <td><strong>Tailwind CSS 速查</strong><br><code>tailwindcss.com/docs</code></td>
+      <td>Tailwind CSS 官方文档，按功能分类列出所有工具类（颜色、间距、排版、响应式）。不用背，遇到样式需求时直接搜索即可。</td>
+    </tr>
+  </table>
+  <div class="callout callout-tip">
+    <strong>建议：</strong>不用一次性看完所有资源。选好你打算用的编程方法后，只查阅对应那行的链接即可。遇到具体问题（比如 Tailwind 怎么写圆角按钮）再搜索文档，按需学习效率最高。
+  </div>
+
+  <!-- ===== 6.7 几点补充 ===== -->
+  <h3 id="task-tips">6.7 几点补充</h3>
+
+  <p>AI 时代，决定你生产力上限的往往不是工具本身，而是你<strong>跟 AI 沟通的能力</strong>。很多人遇到一个问题，第一反应是去搜索引擎找教程、去 B 站看视频——但你在网上找到的答案，大概率是别人几个月甚至几年前写的，不一定适用于你的具体场景。如果直接把这个需求扔给 AI：<br>
+  <code>"帮我用 Tailwind 写一个移动端适配的评分滑块，0-10 分，每分显示对应的疼痛等级描述"</code><br>
+  它在 10 秒内给你一个可以运行的代码块，不满意当场就能改。更进一步，即使你手里已经有一篇教程，也别自己从头啃到尾——把内容扔给 AI，让它帮你提取需要的部分。30 秒搞定原本半小时的阅读量。教程不是你用来读的，是拿来喂 AI 的。</p>
+
+  <p>跟 AI 沟通本身也是需要练习的。同样的需求，描述得越清楚、越具体，AI 给出的结果就越接近你想要的东西。我在想，会不会<strong>学会提问，比学会某一个具体技能，在这个时代走得更远</strong>？</p>
+
+</div>
+
+</div><!-- /main -->
+
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<div class="footer">
+  邓炯斌 · 组会汇报 · Vibe Coding 入门与实践 · 2026
+</div>
+
+<script>
+// 侧边栏切换
+document.getElementById('menuToggle').addEventListener('click', function() {
+  document.getElementById('sidebar').classList.toggle('open');
+});
+
+// 侧边栏滚动到指定锚点
+function scrollToId(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  // 移动端点击后关闭侧边栏
+  if (window.innerWidth <= 860) {
+    document.getElementById('sidebar').classList.remove('open');
+  }
+}
+
+// 关闭侧边栏
+function closeSidebar() {
+  if (window.innerWidth <= 860) {
+    document.getElementById('sidebar').classList.remove('open');
+  }
+}
+
+// 滚动进度条 + 回到顶部按钮
+window.addEventListener('scroll', function() {
+  const btn = document.getElementById('scrollTop');
+  btn.style.display = window.scrollY > 300 ? 'block' : 'none';
+
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = (window.scrollY / docHeight) * 100;
+  document.getElementById('progressBar').style.width = progress + '%';
+});
+
+// 高亮当前侧边栏项
+const sections = ['concept','workflow','tools','example','method1','method2','method3','compare','git-concept','git-analogy','git-steps','git-benefits','git-cheatsheet','task-bg','task-req','task-template','task-deliver','task-resource'];
+const sidebarLinks = document.querySelectorAll('.sidebar a');
+
+window.addEventListener('scroll', function() {
+  let current = '';
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      if (rect.top <= 120) current = id;
+    }
+  });
+  sidebarLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('onclick') && link.getAttribute('onclick').includes(current)) {
+      link.classList.add('active');
+    }
+  });
+});
+</script>
+
+</body>
+</html>
