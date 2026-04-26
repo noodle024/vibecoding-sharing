@@ -193,6 +193,7 @@
     margin: 28px 0 12px;
     padding-left: 12px;
     border-left: 3px solid var(--accent);
+    scroll-margin-top: 72px;
   }
   h4 {
     font-size: 15px;
@@ -753,27 +754,15 @@
 
   <p>下面就用同一套架构、同一个需求，演示三种不同的编程方法怎么实现。</p>
 
-<h3 id="vibecoder">1.5 Vibe Coder：新兴职业与行业现状</h3>
+<h3 id="vibecoder">1.5 Vibe Coder：一个值得了解的新趋势</h3>
 
   <p>
-    <strong>Vibe Coder</strong> 是指以 AI 对话式编程为主要开发方式、以"说人话、出代码"为核心工作流的开发者。2024-2025 年，这个角色从个人实验性玩法演变为有稳定商业模式的职业方向。
+    <strong>Vibe Coder</strong> 是指以自然语言对话为主要编程方式的人——你说需求，AI 出代码。2024 年以来，Lovable.dev、bolt.new 等平台已雇佣全职 Vibe Coder，通过对话直接为客户交付产品。对于临床科研团队，Vibe Coder 思维的核心价值在于：<strong>你不需要成为专业程序员，也能把你的临床判断逻辑变成可用的数字工具</strong>。
   </p>
 
   <p>
-    <strong>行业现状：</strong>Lovable.dev 等平台已雇佣全职 Vibe Coder（如工程师 Lazar Jovanovic），通过自然语言对话直接为客户生成产品。传统开发者、设计师甚至非技术背景的创始人都能通过 AI 工具交付可用软件，Authentic Jobs 等招聘平台已出现 "Vibe Coder" 岗位。ClawHub.ai 托管了 58.7k+ Skills，Vibe Coders 在其中分享和交易可复用的 AI 工作流，形成新的供需生态。
+    <span style="font-size:13px; color:#64748b;">参考：<a href="https://datawhalechina.github.io/easy-vibe/welcome.html" target="_blank">Datawhale Easy-Vibe 课程</a> · ClawHub.ai Skills 商店</span>
   </p>
-
-  <p>
-    <strong>变现路径：</strong>Upwork 自由职业接单（单项目 $200-$2000）、AI 加速的 SaaS 独立产品（开发成本降至传统 10-20%）、ClawHub / Gumroad 模板与技能售卖（成熟玩家月收入数千美元）、以及教学内容输出（Global Tech Council 指出这是增长最快的分支）。
-  </p>
-
-  <p>
-    <strong>代表性产品：</strong>bolt.new / Lovable.dev（AI 全栈生成平台）、Datawhale Easy-Vibe 课程（中文代表作）、ClawHub Skills 商店（社区交易中心）。越来越多个人开发者通过 Vibe Coding 在一天内完成从灵感到上线的全过程。
-  </p>
-
-  <div class="callout callout-tip">
-    <strong>延伸思考：</strong>对于临床科研团队，Vibe Coder 思维的核心价值在于"让懂行的人自己造工具"——你不需要成为专业程序员，也能把你的临床判断逻辑变成可用的数字工具。这意味着科研流程中的很多重复性环节可以被快速数字化，且成本可控。
-  </div>
 
   <hr>
 
@@ -1876,7 +1865,7 @@ hermes             # 启动对话</pre>
 
   <p>首次启动时会引导你完成 <strong>LLM 提供商配置</strong>（推荐选择 OpenRouter、Anthropic Claude 或 SiliconFlow），同样是交互式的，跟着提示走即可。配置完成后，就可以像下面的演示一样，用自然语言直接下达编程任务了。</p>
 
-  <p>如果后续想更换模型（比如切换到 DeepSeek V4 Flash），通过 <code>hermes setup</code> 重新配置即可。以 DeepSeek V4 Flash 为例：</p>
+  <p>如果后续想更换模型（比如切换到 DeepSeek V4 Flash），通过 <code>hermes model</code> 重新配置即可。以 DeepSeek V4 Flash 为例：</p>
   <ul>
     <li>到 <a href="https://platform.deepseek.com/api_keys" target="_blank">platform.deepseek.com/api_keys</a> 注册账号并创建 API Key</li>
     <li>在 <code>hermes setup</code> 的提供商选择中选 <strong>DeepSeek</strong></li>
@@ -2201,6 +2190,14 @@ hermes             # 启动对话</pre>
 
   <div class="callout callout-info">
     <strong>一点说明：</strong>以上操作均使用浏览器网页完成，不需要接触命令行。如果后续想进一步学习 Git 命令行操作（<code>git add</code>、<code>git commit</code>、<code>git push</code>），可以在此基础上继续探索。今天可以先试着做到：<strong>把第一个代码项目上传到 GitHub</strong>。
+  </div>
+
+  <div class="callout callout-warn">
+    <strong>💡 常见失误补救：</strong><br>
+    • <strong>文件传错了：</strong>在仓库文件列表中点那个文件名 → 右上角删除按钮 → 确认删除 → 重新上传正确文件<br>
+    • <strong>Commit 说明写错了：</strong>不影响功能，不用管。如果实在想改，点文件名旁边的铅笔图标（Edit）→ 拉到页面底部可以修改最新一次 commit 说明<br>
+    • <strong>仓库建错了/不要了：</strong>仓库页面 → Settings → 拉到最底 → Danger Zone → Delete this repository → 输入仓库名确认<br>
+    • <strong>上传后文件不显示/页面空白：</strong>检查文件名大小写（GitHub 区分大小写，Windows 不区分），以及文件是否在子文件夹里
   </div>
 </div>
 
@@ -3074,6 +3071,14 @@ function handleClick() {
     </tbody>
   </table>
 
+  <div class="callout callout-warn">
+    <strong>⚠️ 重要提醒：</strong><br>
+    • 本模板及演示代码仅作<strong>学习交流</strong>用途<br>
+    • 实际用于临床研究时，请确保符合医院伦理要求和数据安全规范<br>
+    • <strong>不要</strong>将真实患者信息（姓名、住院号等）上传到公开的 GitHub 仓库——测试请使用虚构数据<br>
+    • 涉及患者隐私的项目建议使用 GitHub <strong>Private 仓库</strong>（创建仓库时选择 Private 即可）
+  </div>
+
   <h3 id="task-resource">6.6 学习资源</h3>
   <table class="tool-table">
     <tr><th style="width:22%">资源</th><th>用途与说明</th></tr>
@@ -3098,6 +3103,28 @@ function handleClick() {
     <strong>建议：</strong>不用一次性看完所有资源。选好你打算用的编程方法后，只查阅对应那行的链接即可。遇到具体问题（比如 Tailwind 怎么写圆角按钮）再搜索文档，按需学习效率最高。
   </div>
 
+  <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px 24px;">
+    <h4 style="font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 12px;">延伸学习路径（按需选择）</h4>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px;">
+      <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 14px;">
+        <strong style="color: #2563eb;">🤖 想系统学 Vibe Coding →</strong><br>
+        <span style="color: #475569;">Datawhale Easy-Vibe 完整课程<br><code style="font-size: 12px;">datawhalechina.github.io/easy-vibe</code></span>
+      </div>
+      <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 14px;">
+        <strong style="color: #059669;">📱 想做微信小程序 →</strong><br>
+        <span style="color: #475569;">Easy-Vibe 小程序篇（前端+后端）<br><code style="font-size: 12px;">stage-3/cross-platform</code></span>
+      </div>
+      <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 14px;">
+        <strong style="color: #7c3aed;">🗄️ 想学数据库 →</strong><br>
+        <span style="color: #475569;">Supabase 官方教程（有中文文档）<br><code style="font-size: 12px;">supabase.com/docs</code></span>
+      </div>
+      <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 14px;">
+        <strong style="color: #d97706;">🚀 想把工具上线 →</strong><br>
+        <span style="color: #475569;">GitHub Pages / Zeabur 部署<br>GitHub 仓库 → Settings → Pages</span>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== 6.7 几点补充 ===== -->
   <h3 id="task-tips">6.7 几点补充</h3>
 
@@ -3106,6 +3133,8 @@ function handleClick() {
   它在 10 秒内给你一个可以运行的代码块，不满意当场就能改。更进一步，即使你手里已经有一篇教程，也别自己从头啃到尾——把内容扔给 AI，让它帮你提取需要的部分。30 秒搞定原本半小时的阅读量。教程不是你用来读的，是拿来喂 AI 的。</p>
 
   <p>跟 AI 沟通本身也是需要练习的。同样的需求，描述得越清楚、越具体，AI 给出的结果就越接近你想要的东西。我在想，会不会<strong>学会提问，比学会某一个具体技能，在这个时代走得更远</strong>？</p>
+
+  <hr style="margin: 32px 0;">
 
 </div>
 
@@ -3153,7 +3182,7 @@ window.addEventListener('scroll', function() {
 });
 
 // 高亮当前侧边栏项
-const sections = ['concept','workflow','tools','example','method1','method2','method3','compare','git-concept','git-analogy','git-steps','git-benefits','git-cheatsheet','task-bg','task-req','task-template','task-deliver','task-resource'];
+const sections = ['concept','workflow','tools','architecture','vibecoder','example','method1','method2','method3','compare','git-concept','git-analogy','git-steps','git-benefits','git-cheatsheet','task-bg','task-req','task-template','task-deliver','task-resource','task-tips'];
 const sidebarLinks = document.querySelectorAll('.sidebar a');
 
 window.addEventListener('scroll', function() {
