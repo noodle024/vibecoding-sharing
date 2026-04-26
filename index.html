@@ -3247,16 +3247,15 @@ function closeSidebar() {
 
 // 滚动进度条 + 回到顶部/底部按钮
 window.addEventListener('scroll', function() {
-  const btn = document.getElementById('scrollTop');
-  btn.style.display = window.scrollY > 300 ? 'block' : 'none';
-
-  const btnBottom = document.getElementById('scrollBottom');
-  const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 300;
-  btnBottom.style.display = btnBottom.style.display || 'block';
-  btnBottom.style.display = atBottom ? 'none' : 'block';
-
   const docHeight = document.documentElement.scrollHeight - window.innerHeight;
   const progress = (window.scrollY / docHeight) * 100;
+
+  const btn = document.getElementById('scrollTop');
+  btn.style.display = progress > 30 ? 'block' : 'none';
+
+  const btnBottom = document.getElementById('scrollBottom');
+  btnBottom.style.display = progress < 70 ? 'block' : 'none';
+
   document.getElementById('progressBar').style.width = progress + '%';
 });
 
