@@ -3316,7 +3316,7 @@ document.addEventListener('click', function(e) {
 function showNagMessage(x, y) {
   var msg = document.createElement('div');
   msg.id = 'nag-message';
-  msg.textContent = '再点自杀 (╬ Ò﹏Ó)' + (nagTriggerCount === 3 ? ' [我没开玩笑]' : '');
+  msg.textContent = '再点就跑路了 (╬ Ò﹏Ó)' + (nagTriggerCount === 3 ? ' [我认真的]' : '');
   // Offset up-left so it doesn't cover the cursor
   var offsetX = -60, offsetY = -50;
   // Clamp to viewport so it doesn't overflow edges
@@ -3337,7 +3337,7 @@ function closePage() {
   // replace the page content with a "closed" notice after a brief delay
   setTimeout(function() {
     if (!document.hidden) {
-      document.documentElement.innerHTML = '<html><head><meta charset="UTF-8"><title>页面已关闭</title><style>body{background:#1e293b;color:#94a3b8;display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;font-size:24px;}</style></head><body><div>🫡 页面已自杀</div></body></html>';
+      document.documentElement.innerHTML = '<html><head><meta charset="UTF-8"><title>页面已关闭</title><style>body{background:#1e293b;color:#94a3b8;display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;font-size:24px;}</style></head><body><div>🏃‍♂️ 页面已跑路</div></body></html>';
     }
   }, 1000);
 }
