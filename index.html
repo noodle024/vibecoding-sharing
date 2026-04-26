@@ -33,8 +33,52 @@
     line-height: 1.8;
     font-size: 15px;
   }
+  /* Page background pattern — fixed, tiled, 20% opacity */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url('bg-pattern-tiled.png');
+    background-repeat: repeat;
+    background-size: auto;
+    opacity: 0.20;
+    z-index: -1;
+    pointer-events: none;
+  }
 
-  /* ===== Header ===== */
+  /* ===== Background Shake Easter Egg ===== */
+  @keyframes bg-shake {
+    0%, 100% { transform: translateY(0); }
+    20%      { transform: translateY(-5px); }
+    40%      { transform: translateY(4px); }
+    60%      { transform: translateY(-3px); }
+    80%      { transform: translateY(2px); }
+  }
+  body.shake-bg::before {
+    animation: bg-shake 0.5s ease-in-out;
+  }
+
+  /* Nag message for easter egg */
+  #nag-message {
+    position: fixed;
+    font-size: 20px;
+    font-weight: 700;
+    color: #dc2626;
+    background: rgba(255,255,255,0.95);
+    padding: 12px 28px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    z-index: 999;
+    animation: nag-fade 2.5s ease-in-out forwards;
+    pointer-events: none;
+  }
+  @keyframes nag-fade {
+    0%   { opacity: 0; transform: scale(0.8); }
+    10%  { opacity: 1; transform: scale(1); }
+    70%  { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.8); }
+  }
+
   .header {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -60,6 +104,14 @@
     font-size: 11px;
     margin-left: 12px;
     color: #94a3b8;
+  }
+  .header-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+    border: 2px solid rgba(255,255,255,0.25);
+    flex-shrink: 0;
   }
   .menu-toggle {
     display: none;
@@ -126,6 +178,8 @@
     margin-top: var(--header-height);
     padding: 40px 48px 80px;
     max-width: 920px;
+    background: rgba(248, 250, 252, 0.92);
+    min-height: calc(100vh - var(--header-height));
   }
 
   /* ===== 封面区 ===== */
@@ -615,6 +669,7 @@
 
 <!-- Header -->
 <div class="header">
+  <img src="avatar.jpg" alt="头像" class="header-avatar">
   <button class="menu-toggle" id="menuToggle">☰</button>
   <h1>Vibe Coding 入门</h1>
   <span class="badge">邓炯斌-组会汇报</span>
@@ -3201,6 +3256,68 @@ window.addEventListener('scroll', function() {
     }
   });
 });
+
+// Background shake easter egg — click on empty background area only
+let shakeCount = 0;
+let shakeTimer = null;
+let nagTriggerCount = 0;  // how many times the nag message has been shown
+document.addEventListener('click', function(e) {
+  // Only trigger when clicking body itself, not on any child content
+  if (e.target !== document.body) return;
+
+  // Shake animation
+  document.body.classList.remove('shake-bg');
+  void document.body.offsetWidth;
+  document.body.classList.add('shake-bg');
+  setTimeout(function() {
+    document.body.classList.remove('shake-bg');
+  }, 500);
+
+  // Easter egg: 3 clicks within 15s → show nag message; after 3 nags → close page
+  shakeCount++;
+  if (shakeCount === 1) {
+    shakeTimer = setTimeout(function() { shakeCount = 0; shakeTimer = null; }, 15000);
+  }
+  if (shakeCount >= 3) {
+    shakeCount = 0;
+    if (shakeTimer) { clearTimeout(shakeTimer); shakeTimer = null; }
+    nagTriggerCount++;
+    if (nagTriggerCount >= 4) {
+      closePage();
+    } else {
+      showNagMessage(e.clientX, e.clientY);
+    }
+  }
+});
+
+function showNagMessage(x, y) {
+  var msg = document.createElement('div');
+  msg.id = 'nag-message';
+  msg.textContent = '再点自杀 (╬ Ò﹏Ó)' + (nagTriggerCount === 3 ? ' [我没开玩笑]' : '');
+  // Offset up-left so it doesn't cover the cursor
+  var offsetX = -60, offsetY = -50;
+  // Clamp to viewport so it doesn't overflow edges
+  var vw = window.innerWidth, vh = window.innerHeight;
+  msg.style.left = Math.min(Math.max(0, x + offsetX), vw - 280) + 'px';
+  msg.style.top  = Math.min(Math.max(0, y + offsetY), vh - 80) + 'px';
+  document.body.appendChild(msg);
+  setTimeout(function() {
+    var el = document.getElementById('nag-message');
+    if (el) el.remove();
+  }, 2500);
+}
+
+function closePage() {
+  // Try to close the window; fallback to replacing content if blocked
+  window.close();
+  // If window.close() didn't work (blocked for non-script-opened windows),
+  // replace the page content with a "closed" notice after a brief delay
+  setTimeout(function() {
+    if (!document.hidden) {
+      document.documentElement.innerHTML = '<html><head><meta charset="UTF-8"><title>页面已关闭</title><style>body{background:#1e293b;color:#94a3b8;display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;font-size:24px;}</style></head><body><div>🫡 页面已自杀</div></body></html>';
+    }
+  }, 1000);
+}
 </script>
 
 </body>
