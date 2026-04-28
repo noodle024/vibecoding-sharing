@@ -617,6 +617,77 @@
     margin-top: 40px;
   }
 
+  /* ===== 课程路线图 ===== */
+  .roadmap {
+    position: relative;
+    padding-left: 32px;
+    margin: 24px 0 8px;
+  }
+  .roadmap::before {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 8px;
+    bottom: 8px;
+    width: 3px;
+    background: linear-gradient(to bottom, #3b82f6, #7c3aed, #059669);
+    border-radius: 2px;
+  }
+  .roadmap-item {
+    position: relative;
+    margin-bottom: 28px;
+    padding-left: 20px;
+  }
+  .roadmap-item:last-child { margin-bottom: 0; }
+  .roadmap-item .dot {
+    position: absolute;
+    left: -32px;
+    top: 6px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+    z-index: 1;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  .roadmap-item .dot.blue { background: #3b82f6; }
+  .roadmap-item .dot.purple { background: #7c3aed; }
+  .roadmap-item .dot.green { background: #059669; }
+  .roadmap-item .rm-date {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 2px;
+  }
+  .roadmap-item .rm-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 4px;
+  }
+  .roadmap-item .rm-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .roadmap-item .rm-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 4px;
+    margin-right: 6px;
+    margin-top: 6px;
+  }
+  .rm-tag.p1 { background: #dbeafe; color: #1d4ed8; }
+  .rm-tag.p2 { background: #f3e8ff; color: #6b21a8; }
+  .rm-tag.p3 { background: #d1fae5; color: #065f46; }
+
   /* ===== 进度条 ===== */
   .progress-bar {
     position: fixed;
@@ -697,6 +768,9 @@
 
 <!-- Sidebar -->
 <nav class="sidebar" id="sidebar">
+  <div class="section-label">📋 课程规划</div>
+  <a onclick="scrollToId('roadmap')">技术路线总览</a>
+  <div style="height:1px;background:#334155;margin:8px 20px;"></div>
   <div class="section-label">第一部分 · Vibe Coding</div>
   <a onclick="scrollToId('concept')">1. Vibe Coding 概述</a>
   <a onclick="scrollToId('concept')" class="sub">1.1 Vibe Coding 是什么</a>
@@ -741,6 +815,74 @@
   <div class="meta">
     <span>📅 2026年4月</span>
     <span>👤 邓炯斌</span>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- 课程规划：技术路线 -->
+<!-- ============================================ -->
+<div class="chapter" id="roadmap">
+  <div class="chapter-header">
+    <div class="number">📋 课程规划</div>
+    <h2>技术路线：从入门到实战</h2>
+    <p class="desc">三次组会分享，逐步深入的 Vibe Coding 学习路径。每次分享环环相扣，建议全程参与。</p>
+  </div>
+
+  <div class="roadmap">
+
+    <div class="roadmap-item">
+      <div class="dot blue">1</div>
+      <div class="rm-date">📅 4月28日（周一）</div>
+      <div class="rm-title">第一部分 · Vibe Coding 概述与三种方法对比</div>
+      <div class="rm-desc">
+        理解 Vibe Coding 的核心思想——用自然语言驱动编程。通过<strong>同一个临床场景</strong>（腰椎功能评估系统），
+        现场对比三种主流编程方法：<strong>IDE 对话式</strong>（Cursor）、<strong>AI Agent 命令行</strong>（Hermes）、
+        <strong>多模态生成</strong>（ChatGPT/Claude 截图生成）。不写一行代码，看完就知道哪种方法适合自己。
+      </div>
+      <div>
+        <span class="rm-tag p1">Vibe Coding 概念</span>
+        <span class="rm-tag p1">Cursor</span>
+        <span class="rm-tag p1">Hermes Agent</span>
+        <span class="rm-tag p1">多模态</span>
+      </div>
+    </div>
+
+    <div class="roadmap-item">
+      <div class="dot purple">2&3</div>
+      <div class="rm-date">📅 5月5日（周一）</div>
+      <div class="rm-title">第二部分 · 了解 GitHub + 第三部分 · 实战任务</div>
+      <div class="rm-desc">
+        <strong>第二部分：</strong>为什么医生也需要用 Git/GitHub？用临床场景类比（病历版本管理 → 代码版本管理），
+        带大家掌握 4-5 个核心命令（init / add / commit / push / pull），现场演示一次完整的提交流程。<br>
+        <strong>第三部分：</strong>发布实战任务——<strong>自己动手做一个临床小工具</strong>。提供模板代码和详细需求文档，
+        用 Vibe Coding 的方式完成一个骨科相关的小型 Web 应用。现场组队或单人作战均可，周期一周。
+      </div>
+      <div>
+        <span class="rm-tag p2">Git 入门</span>
+        <span class="rm-tag p2">GitHub</span>
+        <span class="rm-tag p2">版本控制</span>
+        <span class="rm-tag p2">实战任务</span>
+        <span class="rm-tag p2">模板代码</span>
+      </div>
+    </div>
+
+    <div class="roadmap-item">
+      <div class="dot green">🎯</div>
+      <div class="rm-date">📅 5月12日（周一）</div>
+      <div class="rm-title">实战成果分享</div>
+      <div class="rm-desc">
+        基于上一周实战任务的成果展示环节。每位同学/每组展示自己完成的临床小工具，<strong>现场 live demo</strong>。
+        分享开发过程中踩过的坑、学到的技巧、以及 Vibe Coding 的真实体感。优秀项目可进一步部署上线，
+        用于科室日常数据采集。<strong>不只是学，是真的做出能用的东西。</strong>
+      </div>
+      <div>
+        <span class="rm-tag p3">成果展示</span>
+        <span class="rm-tag p3">Live Demo</span>
+        <span class="rm-tag p3">经验分享</span>
+        <span class="rm-tag p3">部署上线</span>
+      </div>
+    </div>
+
   </div>
 </div>
 
