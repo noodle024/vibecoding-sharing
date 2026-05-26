@@ -717,9 +717,7 @@
   <a onclick="scrollToId('git-steps')">5.3 手把手操作</a>
   <a onclick="scrollToId('git-benefits')">5.4 对我们有什么用？</a>
   <a onclick="scrollToId('git-cheatsheet')">5.5 快速参考</a>
-
-  <div class="section-label">第二部分 · 末 · 任务派发</div>
-  <a onclick="scrollToId('dispatch-concept')" class="sub">任务派发机制</a>
+  <a onclick="scrollToId('dispatch-concept')">任务派发</a>
 
   <div class="section-label">第二部分 · 续 · Skill 管理体系</div>
   <a onclick="scrollToId('skill-concept')" class="sub">5.6 Skill 是什么</a>
@@ -2283,25 +2281,10 @@ hermes             # 启动对话</pre>
     • <strong>仓库建错了/不要了：</strong>仓库页面 → Settings → 拉到最底 → Danger Zone → Delete this repository → 输入仓库名确认<br>
     • <strong>上传后文件不显示/页面空白：</strong>检查文件名大小写（GitHub 区分大小写，Windows 不区分），以及文件是否在子文件夹里
   </div>
-</div>
 
-<!-- ============================================ -->
-<!-- 任务派发器（第二部分 · 末） -->
-<!-- ============================================ -->
-<div class="chapter">
-  <div class="chapter-header">
-    <div class="number">第二部分 · 末</div>
-    <h2>任务派发：让 AI 自己调兵遣将</h2>
-    <p class="desc">当任务变复杂时，一个 Agent 可能忙不过来。Hermes 的任务派发机制可以把工作拆成小块，分给多个子 Agent 并行处理，各司其职。</p>
-  </div>
-
-  <h3 id="dispatch-concept">什么是任务派发</h3>
+  <h3 id="dispatch-concept">任务派发：让 AI 自己调兵遣将</h3>
   <p>
-    Hermes 的 <code>delegate_task</code> 功能可以生成一个独立的子 Agent，给它分配一组工具（比如只给文件读写权限、或只给终端执行权限），让它在隔离的环境中完成任务。这个子 Agent 有自己独立的上下文窗口，不会与主对话互相干扰。
-  </p>
-
-  <p>
-    Craft Profile（本演示文档对应的开发专用工作区）的任务派发遵循一套清晰的模型路由策略，简单来说就是<strong>什么难度的任务交给什么模型</strong>：
+    当任务变复杂时，一个 Agent 可能忙不过来。Hermes 的 <code>delegate_task</code> 功能可以生成一个独立的子 Agent，给它分配一组工具（比如只给文件读写权限、或只给终端执行权限），让它在隔离的环境中完成任务。这个子 Agent 有自己独立的上下文窗口，不会与主对话互相干扰。简单说就是<strong>什么难度的任务交给什么模型</strong>：
   </p>
 
   <table class="tool-table">
