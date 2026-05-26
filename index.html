@@ -723,6 +723,7 @@
   <a onclick="scrollToId('skill-work-principles')" class="sub">5.7 默认 Profile 工作原则</a>
   <a onclick="scrollToId('craft-work-principles')" class="sub">5.8 Craft Profile 工作原则</a>
   <a onclick="scrollToId('find-skill')" class="sub">5.9 Skills Hub & find-skill</a>
+  <a onclick="scrollToId('plugins')" class="sub">5.10 Superpowers & 推荐 Skill</a>
 
   <div class="section-label">第三部分 · 实战任务</div>
   <a onclick="scrollToId('task-bg')">6.1 任务背景</a>
@@ -2471,6 +2472,77 @@ hermes             # 启动对话</pre>
   <div class="callout callout-tip">
     <strong>一个视角：</strong>Skill 体系是 Hermes 与其他 AI Agent 最大的差异点——Claude Code/Sonnet 每次对话都是"全新工卡"，而 Hermes 通过 Skill 把之前解决过的经验真正"存"下来了。你在组会演示中看到 Hermes 能快速搭建评估工具，背后有一部分原因就是相关 Skill 的积累。<br><br>
     如果你未来也想要这样一个会"长经验"的 AI 助手，概念并不复杂：<strong>你的使用习惯和临床经验本身就是最宝贵的 Skill 素材</strong>——每次让 AI 帮你处理一个骨科评估问题，都可以沉淀为一小段可复用的流程。
+  </div>
+
+  <h3 id="plugins">5.10 插件拓展：Superpowers 与更多 Skill 来源</h3>
+  <p>
+    <strong>Superpowers</strong> 是 Hermes Agent 的插件体系——第三方开发者可以将一组相关的 Skill 打包成一个插件，用户安装后即可使用其中的全部 Skill。插件的命名格式为 <code>插件名:Skill名</code>，例如 <code>superpowers:writing-plans</code> 表示来自 superpowers 插件的 writing-plans Skill。
+  </p>
+
+  <h4>安装插件</h4>
+  <p>
+    通过 <code>hermes plugins</code> 命令管理插件生态：<code>hermes plugins search</code> 搜索可用插件，<code>hermes plugins install ID</code> 安装。安装后插件提供的 Skill 会自动出现在 <code>hermes skills list</code> 中，与本地 Skill 完全一样使用。也可以在 <code>config.yaml</code> 的 <code>known_plugin_toolsets</code> 段中配置插件接入的平台（比如只在 CLI 中使用，Telegram 端不使用）。
+  </p>
+
+  <h4>社区中值得关注的 Hermes Skill 示例</h4>
+  <p>以下是一些在日常工作中有实际价值的 Skill，供参考：</p>
+
+  <table class="tool-table">
+    <tr><th style="width:25%">Skill 名称</th><th>一句话定位</th><th style="width:18%">使用场景</th></tr>
+    <tr>
+      <td><strong>writing-plans</strong></td>
+      <td>将需求拆解为小步骤实现计划，每步 2-5 分钟，含测试预期</td>
+      <td>接到多步骤任务时先拆再写</td>
+    </tr>
+    <tr>
+      <td><strong>test-driven-development</strong></td>
+      <td>强制红-绿-重构循环：先写测试，再写最少代码，最后重构</td>
+      <td>任何有测试能力的编程任务</td>
+    </tr>
+    <tr>
+      <td><strong>systematic-debugging</strong></td>
+      <td>四阶段根因调试：理解 Bug → 假设 → 验证 → 修复</td>
+      <td>遇到程序 Bug 时系统化排查</td>
+    </tr>
+    <tr>
+      <td><strong>subagent-driven-development</strong></td>
+      <td>派发子 Agent 执行计划，每任务后两阶段审查（规格合规 → 代码质量）</td>
+      <td>需要确保交付质量的多任务执行</td>
+    </tr>
+    <tr>
+      <td><strong>spike</strong></td>
+      <td>快速实验验证想法可行性，跑通即弃或沉淀为正式方案</td>
+      <td>不确定某方案是否可行时先实验</td>
+    </tr>
+    <tr>
+      <td><strong>design-md</strong></td>
+      <td>编写和验证 Google 风格的 DESIGN.md 设计文档</td>
+      <td>开始写代码前做架构设计记录</td>
+    </tr>
+    <tr>
+      <td><strong>arxiv / pubmed-literature-search</strong></td>
+      <td>直接在终端搜索 arXiv 论文或 PubMed 文献</td>
+      <td>文献调研、查找研究背景</td>
+    </tr>
+    <tr>
+      <td><strong>anatomical-coordinate-statistical-analysis</strong></td>
+      <td>3D 解剖坐标数据的完整统计分析工作流</td>
+      <td>处理 3D Slicer 等软件导出的坐标数据</td>
+    </tr>
+    <tr>
+      <td><strong>ocm-and-documents</strong></td>
+      <td>从 PDF/扫描件中提取文字（OCR），支持中文</td>
+      <td>把纸质病历/PDF 文献变成可编辑文本</td>
+    </tr>
+    <tr>
+      <td><strong>html-to-docx-conversion</strong></td>
+      <td>将 HTML 文档转换为格式正确的 Word (.docx) 文件</td>
+      <td>把网页/HTML 文档转为可打印的 Word 文档</td>
+    </tr>
+  </table>
+
+  <div class="callout callout-info">
+    <strong>一点说明：</strong>上面这些 Skill 来自 Hermes 官方的 Skills Hub、社区贡献和内置 Skill 列表，并非虚构。初次上手时可从 <code>writing-plans</code> 和 <code>spike</code> 开始体验——它们的逻辑简单直接，能让你快速感受 Skill 系统"把经验固化成流程"的思路。以后自己熟悉了，也可以反向贡献：把你写好的 Skill 发布到社区。
   </div>
 
 </div>
