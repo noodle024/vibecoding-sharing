@@ -137,8 +137,10 @@
     padding: 12px 0;
     transition: transform 0.3s;
   }
-  .sidebar::-webkit-scrollbar { width: 4px; }
-  .sidebar::-webkit-scrollbar-thumb { background: #475569; border-radius: 2px; }
+  .sidebar::-webkit-scrollbar { width: 8px; }
+  .sidebar::-webkit-scrollbar-track { background: #1e293b; }
+  .sidebar::-webkit-scrollbar-thumb { background: #64748b; border-radius: 4px; }
+  .sidebar { scrollbar-width: thin; scrollbar-color: #64748b #1e293b; }
   .sidebar .section-label {
     padding: 16px 20px 4px;
     font-size: 10px;
