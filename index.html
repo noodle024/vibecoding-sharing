@@ -617,77 +617,6 @@
     margin-top: 40px;
   }
 
-  /* ===== 课程路线图 ===== */
-  .roadmap {
-    position: relative;
-    padding-left: 32px;
-    margin: 24px 0 8px;
-  }
-  .roadmap::before {
-    content: '';
-    position: absolute;
-    left: 11px;
-    top: 8px;
-    bottom: 8px;
-    width: 3px;
-    background: linear-gradient(to bottom, #3b82f6, #7c3aed, #059669);
-    border-radius: 2px;
-  }
-  .roadmap-item {
-    position: relative;
-    margin-bottom: 28px;
-    padding-left: 20px;
-  }
-  .roadmap-item:last-child { margin-bottom: 0; }
-  .roadmap-item .dot {
-    position: absolute;
-    left: -32px;
-    top: 6px;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 700;
-    color: white;
-    z-index: 1;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  }
-  .roadmap-item .dot.blue { background: #3b82f6; }
-  .roadmap-item .dot.purple { background: #7c3aed; }
-  .roadmap-item .dot.green { background: #059669; }
-  .roadmap-item .rm-date {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--accent);
-    margin-bottom: 2px;
-  }
-  .roadmap-item .rm-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--primary);
-    margin-bottom: 4px;
-  }
-  .roadmap-item .rm-desc {
-    font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 1.6;
-  }
-  .roadmap-item .rm-tag {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 2px 10px;
-    border-radius: 4px;
-    margin-right: 6px;
-    margin-top: 6px;
-  }
-  .rm-tag.p1 { background: #dbeafe; color: #1d4ed8; }
-  .rm-tag.p2 { background: #f3e8ff; color: #6b21a8; }
-  .rm-tag.p3 { background: #d1fae5; color: #065f46; }
-
   /* ===== 进度条 ===== */
   .progress-bar {
     position: fixed;
@@ -768,8 +697,6 @@
 
 <!-- Sidebar -->
 <nav class="sidebar" id="sidebar">
-  <div class="section-label">📋 课程规划</div>
-  <div style="height:1px;background:#334155;margin:8px 20px;"></div>
   <div class="section-label">第一部分 · Vibe Coding</div>
   <a onclick="scrollToId('concept')">1. Vibe Coding 概述</a>
   <a onclick="scrollToId('concept')" class="sub">1.1 Vibe Coding 是什么</a>
@@ -790,6 +717,12 @@
   <a onclick="scrollToId('git-steps')">5.3 手把手操作</a>
   <a onclick="scrollToId('git-benefits')">5.4 对我们有什么用？</a>
   <a onclick="scrollToId('git-cheatsheet')">5.5 快速参考</a>
+
+  <div class="section-label">第二部分 · 续 · Skill 管理体系</div>
+  <a onclick="scrollToId('skill-concept')" class="sub">5.6 Skill 是什么</a>
+  <a onclick="scrollToId('skill-work-principles')" class="sub">5.7 默认 Profile 工作原则</a>
+  <a onclick="scrollToId('craft-work-principles')" class="sub">5.8 Craft Profile 工作原则</a>
+  <a onclick="scrollToId('find-skill')" class="sub">5.9 Skills Hub & find-skill</a>
 
   <div class="section-label">第三部分 · 实战任务</div>
   <a onclick="scrollToId('task-bg')">6.1 任务背景</a>
@@ -814,69 +747,6 @@
   <div class="meta">
     <span>📅 2026年4月</span>
     <span>👤 邓炯斌</span>
-  </div>
-</div>
-
-<!-- ============================================ -->
-<!-- 课程规划：技术路线 -->
-<!-- ============================================ -->
-<div class="chapter" id="roadmap">
-  <div class="chapter-header">
-    <h2>课程规划</h2>
-  </div>
-
-  <div class="roadmap">
-
-    <div class="roadmap-item">
-      <div class="dot blue">1</div>
-      <div class="rm-date">📅 4月28日（周二）</div>
-      <div class="rm-title">第一部分 · Vibe Coding 概述与三种方法对比</div>
-      <div class="rm-desc">
-        理解 Vibe Coding 的核心思想——用自然语言驱动编程。通过<strong>同一个临床场景</strong>（腰椎功能评估系统），
-        现场对比三种主流编程方法：<strong>IDE 对话式</strong>（Cursor）、<strong>AI Agent 命令行</strong>（Hermes）、
-        <strong>多模态生成</strong>（ChatGPT/Claude 截图生成）。不写一行代码，看完就知道哪种方法适合自己。
-      </div>
-      <div>
-        <span class="rm-tag p1">Vibe Coding 概念</span>
-        <span class="rm-tag p1">Cursor</span>
-        <span class="rm-tag p1">Hermes Agent</span>
-        <span class="rm-tag p1">多模态</span>
-      </div>
-    </div>
-
-    <div class="roadmap-item">
-      <div class="dot purple">2&3</div>
-      <div class="rm-date">📅 5月5日（周二）</div>
-      <div class="rm-title">第二部分 · 了解 GitHub + 第三部分 · 实战任务</div>
-      <div class="rm-desc">
-        <strong>第二部分：</strong>为什么医生也需要用 Git/GitHub？用临床场景类比（病历版本管理 → 代码版本管理），
-        带大家掌握 4-5 个核心命令（init / add / commit / push / pull），现场演示一次完整的提交流程。<br>
-        <strong>第三部分：</strong>发布实战任务——<strong>自己动手做一个临床小工具</strong>。
-      </div>
-      <div>
-        <span class="rm-tag p2">Git 入门</span>
-        <span class="rm-tag p2">GitHub</span>
-        <span class="rm-tag p2">版本控制</span>
-        <span class="rm-tag p2">实战任务</span>
-        <span class="rm-tag p2">模板代码</span>
-      </div>
-    </div>
-
-    <div class="roadmap-item">
-      <div class="dot green">🎯</div>
-      <div class="rm-date">📅 5月12日（周二）</div>
-      <div class="rm-title">实战成果分享</div>
-      <div class="rm-desc">
-        基于上一周实战任务的成果展示环节。每位同学/每组展示自己完成的临床小工具，<strong>现场 live demo</strong>。
-      </div>
-      <div>
-        <span class="rm-tag p3">成果展示</span>
-        <span class="rm-tag p3">Live Demo</span>
-        <span class="rm-tag p3">经验分享</span>
-        <span class="rm-tag p3">部署上线</span>
-      </div>
-    </div>
-
   </div>
 </div>
 
@@ -2408,6 +2278,201 @@ hermes             # 启动对话</pre>
     • <strong>仓库建错了/不要了：</strong>仓库页面 → Settings → 拉到最底 → Danger Zone → Delete this repository → 输入仓库名确认<br>
     • <strong>上传后文件不显示/页面空白：</strong>检查文件名大小写（GitHub 区分大小写，Windows 不区分），以及文件是否在子文件夹里
   </div>
+</div>
+
+<!-- ============================================ -->
+<!-- Skills 与工作原则（续第二部分） -->
+<!-- ============================================ -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="number">第二部分 · 续</div>
+    <h2>Skill 管理体系与工作原则</h2>
+    <p class="desc">AI Agent 的学习是持续的——每次解决问题的经验都可以被保存为可复用的技能（Skill），不同场景有不同的工作原则来保证质量。</p>
+  </div>
+
+  <h3 id="skill-concept">5.6 Skill 是什么</h3>
+  <p>
+    <strong>Skill</strong> 是 Hermes Agent 的"经验手册"——当解决了一个复杂问题、发现了一个有效的工作流、或者被纠正了一个错误，Hermes 可以把这段经验写成一个 Skill 文档，之后遇到类似场景就能直接加载复用。Skill 不是一次性工具，而是随时间积累的"肌肉记忆"。
+  </p>
+
+  <div class="callout callout-key">
+    <p style="font-size: 15px; font-weight: 500;">Skill 的本质是结构化流程文档 + 触发条件描述。AI 看到"Use when XXX"就知道什么时候该用它，看到里面的步骤就知道怎么做。</p>
+  </div>
+
+  <h3 id="skill-work-principles">5.7 工作原则类 Skill（默认 Profile）</h3>
+  <p>默认 Profile 主要处理临床/科研任务，积累的工作原则类 Skill 主要面向严谨性和可重复性：</p>
+
+  <table class="tool-table">
+    <tr><th style="width:30%">Skill 名称</th><th>一句话定位</th><th style="width:18%">使用场景</th></tr>
+    <tr>
+      <td><strong>writing-plans</strong></td>
+      <td>将需求拆解为小步骤实现计划，每步 2-5 分钟，含测试预期</td>
+      <td>接到一个多步骤任务时，先拆再写</td>
+    </tr>
+    <tr>
+      <td><strong>subagent-driven-development</strong></td>
+      <td>分派专用子 Agent 执行计划，每任务后两阶段审查（规格合规 → 代码质量）</td>
+      <td>需要确保交付质量的多任务执行</td>
+    </tr>
+    <tr>
+      <td><strong>test-driven-development</strong></td>
+      <td>强制红-绿-重构循环：先写失败测试，再写最少代码，最后重构</td>
+      <td>任何有测试能力的编程任务</td>
+    </tr>
+    <tr>
+      <td><strong>systematic-debugging</strong></td>
+      <td>四阶段根因调试：理解 Bug → 假设 → 验证 → 修复</td>
+      <td>遇到程序 Bug 时系统化排查</td>
+    </tr>
+    <tr>
+      <td><strong>spike</strong></td>
+      <td>快速实验验证想法可行性，跑通即弃或沉淀为正式方案</td>
+      <td>不确定某方案是否可行，先实验再决定</td>
+    </tr>
+    <tr>
+      <td><strong>memory-vs-skill-categorization</strong></td>
+      <td>判断新信息应存入记忆还是沉淀为 Skill 的决策框架</td>
+      <td>每轮迭代结束时区分"事实"和"流程"</td>
+    </tr>
+    <tr>
+      <td><strong>hermes-agent-skill-authoring</strong></td>
+      <td>编写标准 SKILL.md 文件的规范：YAML 前置元数据 + Markdown 正文</td>
+      <td>创建或修改一个 Skill 时</td>
+    </tr>
+  </table>
+
+  <h3 id="craft-work-principles">5.8 工作原则类 Skill（Craft Profile）</h3>
+  <p>Craft Profile 主要负责编程/开发任务，积累的 Skill 更偏向软件工程标准和团队协作习惯：</p>
+
+  <table class="tool-table">
+    <tr><th style="width:30%">Skill 名称</th><th>一句话定位</th><th style="width:18%">使用场景</th></tr>
+    <tr>
+      <td><strong>writing-skills（Anthropic 风格）</strong></td>
+      <td>将 TDD 映射到 Skill 编写：先跑基线观察失败 → 写 Skill → 验证通过 → 重构堵漏</td>
+      <td>从零创建一个高质量 Skill</td>
+    </tr>
+    <tr>
+      <td><strong>brainstorming</strong></td>
+      <td>在任何实现之前先探索用户意图、提出多方案、展示设计并获得批准</td>
+      <td>开始写代码之前必须先做脑暴</td>
+    </tr>
+    <tr>
+      <td><strong>verification-before-completion</strong></td>
+      <td>铁律：没有新鲜验证证据，不许宣称完成。跑完命令看输出再下结论</td>
+      <td>任何宣称"修好了/做完了"的时刻</td>
+    </tr>
+    <tr>
+      <td><strong>dispatching-parallel-agents</strong></td>
+      <td>对 2+ 个独立无共享的问题域，并行分派子 Agent 各自排查</td>
+      <td>多测试文件同时失败、多子系统独立故障</td>
+    </tr>
+    <tr>
+      <td><strong>receiving-code-review</strong></td>
+      <td>收到 Code Review 反馈后的标准响应：先理解再实施，先验证再假设</td>
+      <td>收到 PR Review 意见时</td>
+    </tr>
+    <tr>
+      <td><strong>chinese-git-workflow / chinese-commit-conventions</strong></td>
+      <td>中文团队的 Git 操作规范：分支策略、commit message 格式、PR 流程</td>
+      <td>在中文项目中协作开发</td>
+    </tr>
+    <tr>
+      <td><strong>chinese-documentation / chinese-code-review</strong></td>
+      <td>中文文档编写规范和 Code Review 检查清单</td>
+      <td>产出中文技术文档或审核代码</td>
+    </tr>
+    <tr>
+      <td><strong>workflow-runner</strong></td>
+      <td>在当前会话中直接执行 YAML 工作流文件，无需额外 API Key</td>
+      <td>有多角色协作的 YAML 工作流</td>
+    </tr>
+  </table>
+
+  <div class="callout callout-info">
+    <strong>一点说明：</strong>两个 Profile 共享了部分基础 Skill（如 writing-plans、subagent-driven-development），但各自的扩展 Skill 有明确分工——Default 保临床严谨，Craft 保工程质量。Profile 之间通过 Kanban 或 delegate_task 协作时，最终交付物的质量标准由 Craft 侧的 verification-before-completion 来验证。
+  </div>
+
+  <h3 id="find-skill">5.9 GitHub 上找 Skill：Skills Hub & find-skill</h3>
+  <p>
+    一个 Skill 写好了只能自用，但 Hermes 有完整的<strong>Skills Hub</strong>生态——你可以像下 App 一样从社区安装别人写好的 Skill，也可以把自己的 Skill 发布出去。
+  </p>
+
+  <h4>Skills Hub 是什么</h4>
+  <p>
+    Skills Hub 是 Hermes Agent 官方的 Skill 市场，位于 <a href="https://hermes-agent.nousresearch.com/docs/skills" target="_blank">hermes-agent.nousresearch.com/docs/skills</a>。它和 Hermes Agent 本体一起维护在 <a href="https://github.com/NousResearch/hermes-agent" target="_blank">NousResearch/hermes-agent</a> 仓库中，社区贡献的 Skill 通过 Pull Request 合入，经过质量审查后对所有用户可见。
+  </p>
+
+  <h4>find-skill：通过 CLI 搜索社区 Skill</h4>
+  <p>
+    <code>hermes skills search</code>（别名 find-skill）是 CLI 中搜索社区 Skill 的命令。不需要打开浏览器，直接在终端里搜索关键词就能找到可用的 Skill：
+  </p>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">1</span>搜索 Skill</div>
+    <div class="step-body">
+      终端里输入：<code>hermes skills search 关键词</code><br>
+      比如 <code>hermes skills search 3D printing</code> 或 <code>hermes skills search R statistics</code><br>
+      返回结果是匹配的描述和 Skill 名称列表，每个带简短说明和安装 ID。
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">2</span>预览 Skill 内容</div>
+    <div class="step-body">
+      不确定某个 Skill 是否合用？先预览：<code>hermes skills inspect ID</code><br>
+      查看它的完整 SKILL.md 内容，确认里面的步骤和前提条件是否符合你的场景。
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">3</span>安装 Skill</div>
+    <div class="step-body">
+      确认后安装：<code>hermes skills install ID</code><br>
+      安装后的 Skill 会存入 <code>~/.hermes/skills/</code>，下次启动 Hermes 时自动可用。也可以在启动时手动加载：<code>hermes --skills skill-name</code>，或者在会话中通过 <code>/skill skill-name</code> 加载。
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">4</span>浏览全部 Skill</div>
+    <div class="step-body">
+      <code>hermes skills browse</code> — 打开交互式浏览界面，按分类浏览所有可用 Skill。<br>
+      <code>hermes skills catalog</code> — 另有一个分类目录页面。<br>
+      也可以直接在 GitHub 上翻 <code>NousResearch/hermes-agent/agent/skills_hub/</code> 目录，所有社区 Skill 的源文件都在那里。
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">5</span>发布你自己的 Skill</div>
+    <div class="step-body">
+      如果你写了一个对自己工作很有效的 Skill，可以发布到社区：<br>
+      <code>hermes skills publish 路径</code><br>
+      也可以直接向 <a href="https://github.com/NousResearch/hermes-agent" target="_blank">NousResearch/hermes-agent</a> 仓库提 Pull Request，把你的 SKILL.md 加到 skills_hub 目录下。通过审核后，全球 Hermes 用户都能搜索到并安装使用。
+    </div>
+  </div>
+
+  <h4>不仅限于 Hub：从任何 URL 安装</h4>
+  <p>
+    <code>hermes skills install</code> 还支持直接传入一个 <code>https://.../SKILL.md</code> 的 URL。这意味着即使某个 Skill 没有发布到官方 Hub，只要它公开可访问，就可以直接安装。这对于内部团队共享私有 Skill（放在公司 GitLab/自建服务上）很有用。
+  </p>
+
+  <h4>Skill 的日常管理</h4>
+  <table class="tool-table">
+    <tr><th>你想做什么</th><th>命令</th></tr>
+    <tr><td>列出已安装的 Skill</td><td><code>hermes skills list</code></td></tr>
+    <tr><td>搜索社区 Skill</td><td><code>hermes skills search 关键词</code></td></tr>
+    <tr><td>查看 Skill 的完整内容</td><td><code>hermes skills inspect ID</code></td></tr>
+    <tr><td>安装一个 Skill</td><td><code>hermes skills install ID</code></td></tr>
+    <tr><td>在会话中加载 Skill</td><td><code>/skill skill-name</code></td></tr>
+    <tr><td>卸载一个 Skill</td><td><code>hermes skills uninstall ID</code></td></tr>
+    <tr><td>检查 Skill 更新</td><td><code>hermes skills check</code></td></tr>
+    <tr><td>发布到社区</td><td><code>hermes skills publish 路径</code></td></tr>
+  </table>
+
+  <div class="callout callout-tip">
+    <strong>一个视角：</strong>Skill 体系是 Hermes 与其他 AI Agent 最大的差异点——Claude Code/Sonnet 每次对话都是"全新工卡"，而 Hermes 通过 Skill 把之前解决过的经验真正"存"下来了。你在组会演示中看到 Hermes 能快速搭建评估工具，背后有一部分原因就是相关 Skill 的积累。<br><br>
+    如果你未来也想要这样一个会"长经验"的 AI 助手，概念并不复杂：<strong>你的使用习惯和临床经验本身就是最宝贵的 Skill 素材</strong>——每次让 AI 帮你处理一个骨科评估问题，都可以沉淀为一小段可复用的流程。
+  </div>
+
 </div>
 
 <!-- ============================================ -->
