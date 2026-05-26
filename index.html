@@ -719,7 +719,6 @@
   <a onclick="scrollToId('git-steps')">5.3 手把手操作</a>
   <a onclick="scrollToId('git-benefits')">5.4 对我们有什么用？</a>
   <a onclick="scrollToId('git-cheatsheet')">5.5 快速参考</a>
-  <a onclick="scrollToId('dispatch-concept')">任务派发</a>
 
   <div class="section-label">第二部分 · 续 · Skill 管理体系</div>
   <a onclick="scrollToId('skill-concept')" class="sub">5.6 Skill 是什么</a>
@@ -728,6 +727,7 @@
   <a onclick="scrollToId('find-skill')" class="sub">5.9 Skills Hub & find-skill</a>
   <a onclick="scrollToId('plugins')" class="sub">5.10 Superpowers & 推荐 Skill</a>
   <a onclick="scrollToId('social-skill')" class="sub">5.11 刷抖音小红书找 Skill</a>
+  <a onclick="scrollToId('dispatch-concept')" class="sub">5.12 任务派发</a>
 
   <div class="section-label">第三部分 · 实战任务</div>
   <a onclick="scrollToId('task-bg')">6.1 任务背景</a>
@@ -2284,90 +2284,6 @@ hermes             # 启动对话</pre>
     • <strong>上传后文件不显示/页面空白：</strong>检查文件名大小写（GitHub 区分大小写，Windows 不区分），以及文件是否在子文件夹里
   </div>
 
-  <h3 id="dispatch-concept">任务派发：让 AI 自己调兵遣将</h3>
-  <p>
-    当任务变复杂时，一个 Agent 可能忙不过来。Hermes 的 <code>delegate_task</code> 功能可以生成一个独立的子 Agent，给它分配一组工具（比如只给文件读写权限、或只给终端执行权限），让它在隔离的环境中完成任务。这个子 Agent 有自己独立的上下文窗口，不会与主对话互相干扰。简单说就是<strong>什么难度的任务交给什么模型</strong>：
-  </p>
-
-  <table class="tool-table">
-    <tr><th style="width:22%">任务类型</th><th>派发模型</th><th>适用场景</th></tr>
-    <tr>
-      <td><strong>日常简单任务</strong></td>
-      <td><code>deepseek-v4-flash</code>（当前模型）</td>
-      <td>增删改查、简单 API 调用、单文件修改、文本润色</td>
-    </tr>
-    <tr>
-      <td><strong>高精度长链推理</strong></td>
-      <td><code>deepseek-v4-pro</code></td>
-      <td>复杂逻辑分析、多步代码重构、深层数据推理——直接派给同通道的 Pro 版本</td>
-    </tr>
-    <tr>
-      <td><strong>并行独立子任务</strong></td>
-      <td>多个 <code>delegate_task</code> 同时派发</td>
-      <td>多个不依赖彼此的任务（如同时写 3 个独立函数），子 Agent 各跑各的，汇总回来</td>
-    </tr>
-    <tr>
-      <td><strong>视觉分析</strong></td>
-      <td><code>gemini-3-flash</code>（走 lingshi 中转）</td>
-      <td>看截图、识别图片中的文字/图标/布局</td>
-    </tr>
-  </table>
-
-  <h4>常见的派发模式</h4>
-
-  <div class="step-card">
-    <div class="step-title"><span class="num">1</span>计划的拆解与创建</div>
-    <div class="step-body">
-      先通过 <code>writing-plans</code> 等 Skill 将需求拆成多个独立任务，每步 2-5 分钟，含测试预期。这个计划本身就是后续派发的蓝图。
-    </div>
-  </div>
-
-  <div class="step-card">
-    <div class="step-title"><span class="num">2</span>逐一派发实现者子 Agent</div>
-    <div class="step-body">
-      每个任务派一个子 Agent，把完整描述（需求、文件路径、验证标准）一次性传给它的 <code>goal</code> 参数。子 Agent 按照 TDD 流程：写测试 → 运行确认失败 → 写实现 → 运行确认通过 → 提交。
-    </div>
-  </div>
-
-  <div class="step-card">
-    <div class="step-title"><span class="num">3</span>两阶段审查</div>
-    <div class="step-body">
-      实现者完成后，先后派发两个审查看板子 Agent：<br>
-      <strong>规格合规审查</strong> — 核验输出是否符合原始需求，没有漏做也没有多做<br>
-      <strong>代码质量审查</strong> — 检查命名、边界处理、安全性、测试覆盖率<br>
-      如果发现的问题，修完再重新审查，直到通过。
-    </div>
-  </div>
-
-  <div class="step-card">
-    <div class="step-title"><span class="num">4</span>最终集成验证</div>
-    <div class="step-body">
-      所有子任务完成后，派最后一个子 Agent 检查各组件之间的接口一致性，跑完整测试套件，确认没有回归缺陷。
-    </div>
-  </div>
-
-  <div class="callout callout-info">
-    <strong>为什么这样做？</strong>每个子 Agent 有独立的上下文窗口，不会因为本对话积累的中间推理过程而污染判断。两阶段审查确保不会产生"看起来跑通了但读了源码才发现有坑"的情况。并行派发独立任务则可以充分利用多模型并发处理，缩短总执行时间。
-  </div>
-
-  <h4>一个实际的例子</h4>
-  <p>
-    假设你要开发一个"术前风险评估工具"——包含患者信息表单、ASA 评分选择、检查结果输入、风险评估算法、报告生成 5 个模块。按照任务派发的思路：
-  </p>
-  <ul>
-    <li><strong>第一步：</strong>主对话拆解计划（writing-plans），明确 5 个模块各自的输入输出接口</li>
-    <li><strong>第二步：</strong>同时派发 3 个子 Agent——一个写表单和 ASA 评分 UI，一个写输入逻辑，一个写风险算法——三者并行互不干扰</li>
-    <li><strong>第三步：</strong>对每个子 Agent 的输出逐一做两阶段审查，修正接口不一致之处</li>
-    <li><strong>第四步：</strong>集成验证子 Agent 检查整体流程是否能正常走通</li>
-  </ul>
-  <p>
-    整个过程由主 Agent 协调调度，你只需要告诉它"我要一个术前风险评估工具"，剩下的拆解、派发、审查、集成全部自动完成。
-  </p>
-
-  <div class="callout callout-tip">
-    <strong>一句话理解：</strong>主 Agent 当项目经理，子 Agent 当开发工程师，审查 Agent 当测试验收——不靠一个模型硬扛所有事。
-  </div>
-
 </div>
 
 <!-- ============================================ -->
@@ -2681,6 +2597,90 @@ hermes             # 启动对话</pre>
 
   <div class="callout callout-info">
     <strong>一句话总结：</strong>官方 Skills Hub 告诉你"有什么"，抖音小红书告诉你"别人怎么用"——两个都看，信息才完整。下次打开抖音的时候，搜一下你的研究方向+AI，大概率能刷到几条有用的。
+  </div>
+
+  <h3 id="dispatch-concept">5.12 任务派发：让 AI 自己调兵遣将</h3>
+  <p>
+    当任务变复杂时，一个 Agent 可能忙不过来。Hermes 的 <code>delegate_task</code> 功能可以生成一个独立的子 Agent，给它分配一组工具（比如只给文件读写权限、或只给终端执行权限），让它在隔离的环境中完成任务。这个子 Agent 有自己独立的上下文窗口，不会与主对话互相干扰。简单说就是<strong>什么难度的任务交给什么模型</strong>：
+  </p>
+
+  <table class="tool-table">
+    <tr><th style="width:22%">任务类型</th><th>派发模型</th><th>适用场景</th></tr>
+    <tr>
+      <td><strong>日常简单任务</strong></td>
+      <td><code>deepseek-v4-flash</code></td>
+      <td>增删改查、简单 API 调用、单文件修改、文本润色</td>
+    </tr>
+    <tr>
+      <td><strong>高精度长链推理</strong></td>
+      <td><code>deepseek-v4-pro</code></td>
+      <td>复杂逻辑分析、多步代码重构、深层数据推理</td>
+    </tr>
+    <tr>
+      <td><strong>并行独立子任务</strong></td>
+      <td>多个 <code>delegate_task</code> 同时派发</td>
+      <td>多个不依赖彼此的任务，子 Agent 各跑各的，汇总回来</td>
+    </tr>
+    <tr>
+      <td><strong>视觉分析</strong></td>
+      <td><code>gemini-3-flash</code>（走 lingshi 中转）</td>
+      <td>看截图、识别图片中的文字/图标/布局</td>
+    </tr>
+  </table>
+
+  <h4>常见的派发模式</h4>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">1</span>计划的拆解与创建</div>
+    <div class="step-body">
+      先通过 <code>writing-plans</code> 等 Skill 将需求拆成多个独立任务，每步 2-5 分钟，含测试预期。这个计划本身就是后续派发的蓝图。
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">2</span>逐一派发实现者子 Agent</div>
+    <div class="step-body">
+      每个任务派一个子 Agent，把完整描述（需求、文件路径、验证标准）一次性传给它。子 Agent 按照 TDD 流程：写测试 → 运行确认失败 → 写实现 → 运行确认通过 → 提交。
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">3</span>两阶段审查</div>
+    <div class="step-body">
+      实现者完成后，先后派发两个审查看板子 Agent：<br>
+      <strong>规格合规审查</strong> — 核验输出是否符合原始需求，没有漏做也没有多做<br>
+      <strong>代码质量审查</strong> — 检查命名、边界处理、安全性、测试覆盖率<br>
+      如果发现问题，修完再重新审查，直到通过。
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title"><span class="num">4</span>最终集成验证</div>
+    <div class="step-body">
+      所有子任务完成后，派最后一个子 Agent 检查各组件之间的接口一致性，跑完整测试套件，确认没有回归缺陷。
+    </div>
+  </div>
+
+  <div class="callout callout-info">
+    <strong>为什么这样做？</strong>每个子 Agent 有独立的上下文窗口，不会因为本对话积累的中间推理过程而污染判断。两阶段审查确保不会产生"看起来跑通了但读了源码才发现有坑"的情况。并行派发独立任务可以充分利用多模型并发处理，缩短总执行时间。
+  </div>
+
+  <h4>一个实际的例子</h4>
+  <p>
+    假设你要开发一个"术前风险评估工具"——包含患者信息表单、ASA 评分选择、检查结果输入、风险评估算法、报告生成 5 个模块。按照任务派发的思路：
+  </p>
+  <ul>
+    <li><strong>第一步：</strong>主对话拆解计划（writing-plans），明确 5 个模块各自的输入输出接口</li>
+    <li><strong>第二步：</strong>同时派发 3 个子 Agent——一个写表单和 ASA 评分 UI，一个写输入逻辑，一个写风险算法——三者并行互不干扰</li>
+    <li><strong>第三步：</strong>对每个子 Agent 的输出逐一做两阶段审查，修正接口不一致之处</li>
+    <li><strong>第四步：</strong>集成验证子 Agent 检查整体流程是否能正常走通</li>
+  </ul>
+  <p>
+    整个过程由主 Agent 协调调度，你只需要告诉它"我要一个术前风险评估工具"，剩下的拆解、派发、审查、集成全部自动完成。
+  </p>
+
+  <div class="callout callout-tip">
+    <strong>一句话理解：</strong>主 Agent 当项目经理，子 Agent 当开发工程师，审查 Agent 当测试验收——不靠一个模型硬扛所有事。
   </div>
 
 </div>
